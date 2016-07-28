@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="SaveALife:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="savelife-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="SaveALife:war exploded" />
+    </root>
+  </artifact>
+</component>

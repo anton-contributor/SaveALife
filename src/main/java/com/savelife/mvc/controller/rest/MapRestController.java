@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created by anton on 27.07.16.
- */
 @RestController
 public class MapRestController {
 
@@ -22,9 +19,6 @@ public class MapRestController {
     public ResponseEntity<String> print(){
 
         RouteEntity entity = new RouteEntity();
-
-        entity.setOrigin("919191");
-        entity.setDestination("919191");
 
         routeService.save(entity);
         return new ResponseEntity<String>(routeService.findById(new Long(1)).toString(), HttpStatus.OK);

@@ -1,10 +1,8 @@
 package com.savelife.mvc.model;
 
 import javax.persistence.*;
+import java.util.List;
 
-/**
- * Created by anton on 27.07.16.
- */
 @Entity
 @Table(name = "route")
 public class RouteEntity {
@@ -14,12 +12,14 @@ public class RouteEntity {
     @Column(name = "id_route")
     private Long id_route;
 
-    @Column(name = "origin")
-    private String origin;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_node", referencedColumnName = "id_route", nullable = false)
+    private List<NodeEntity> wayNodes;
 
-    @Column(name = "destination")
-    private String destination;
-
+    @Column(name = "distance")
+    private int distanceInMeter;
+    @Column(name = "time")
+    int time;
 
     public Long getId_route() {
         return id_route;
@@ -29,22 +29,28 @@ public class RouteEntity {
         this.id_route = id_route;
     }
 
-
-    public String getOrigin() {
-        return origin;
+    public List<NodeEntity> getWayNodes() {
+        return wayNodes;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public void setWayNodes(List<NodeEntity> wayNodes) {
+        this.wayNodes = wayNodes;
     }
 
-
-    public String getDestination() {
-        return destination;
+    public int getDistanceInMeter() {
+        return distanceInMeter;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setDistanceInMeter(int distanceInMeter) {
+        this.distanceInMeter = distanceInMeter;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 
     @Override
@@ -54,17 +60,15 @@ public class RouteEntity {
 
         RouteEntity that = (RouteEntity) o;
 
-        if (id_route != null ? !id_route.equals(that.id_route) : that.id_route != null) return false;
-        if (origin != null ? !origin.equals(that.origin) : that.origin != null) return false;
-        return destination != null ? destination.equals(that.destination) : that.destination == null;
+        if (distanceInMeter != that.distanceInMeter) return false;
+        return time == that.time;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id_route != null ? id_route.hashCode() : 0;
-        result = 31 * result + (origin != null ? origin.hashCode() : 0);
-        result = 31 * result + (destination != null ? destination.hashCode() : 0);
+        int result = distanceInMeter;
+        result = result + time;
         return result;
     }
 
@@ -72,8 +76,9 @@ public class RouteEntity {
     public String toString() {
         return "RouteEntity{" +
                 "id_route=" + id_route +
-                ", origin='" + origin + '\'' +
-                ", destination='" + destination + '\'' +
+                ", wayNodes=" + wayNodes +
+                ", distanceInMeter=" + distanceInMeter +
+                ", time=" + time +
                 '}';
     }
 }

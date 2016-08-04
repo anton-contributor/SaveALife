@@ -5,7 +5,12 @@ package com.savelife.mvc.service;
  */
 
 import com.savelife.mvc.dao.RouteDao;
+import com.savelife.mvc.model.NodeEntity;
 import com.savelife.mvc.model.RouteEntity;
+import com.savelife.mvc.service.exceptions.IncorrectRequstCoordinatesException;
+import com.savelife.mvc.service.exceptions.RoutingServerNotRespondingException;
+import com.savelife.mvc.service.maps.MapService;
+import com.savelife.mvc.service.maps.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +24,13 @@ public class RouteServiceImpl implements RouteService<RouteEntity,Long>{
 
     @Autowired
     private RouteDao routeDao;
+    @Autowired
+    private MapService mapService;
+
+    @Override
+    public Routing getRouting(NodeEntity start, NodeEntity end) throws IncorrectRequstCoordinatesException, RoutingServerNotRespondingException {
+        return mapService.getRouting(start, end);
+    }
 
     @Override
     public RouteEntity findById(Long aLong) {

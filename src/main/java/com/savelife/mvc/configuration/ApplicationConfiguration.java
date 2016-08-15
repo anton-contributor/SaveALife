@@ -12,6 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import java.io.FileNotFoundException;
+
 /**
  * Created by anton on 27.07.16.
  */
@@ -19,6 +21,9 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.savelife.mvc")
 public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
+
+    public ApplicationConfiguration() throws FileNotFoundException {
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
@@ -40,4 +45,6 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
         messageSource.setBasename("messages");
         return messageSource;
     }
+
+
 }

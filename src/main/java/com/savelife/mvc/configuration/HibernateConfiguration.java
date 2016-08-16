@@ -19,7 +19,6 @@ import java.util.Properties;
  * Created by anton on 27.07.16.
  */
 @Configuration
-
 @EnableTransactionManagement
 @ComponentScan({"com.savelife.mvc.configuration"})
 @PropertySource(value = {"classpath:application.properties"})
@@ -32,7 +31,7 @@ public class HibernateConfiguration {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { "com.savelife.mvc.model" });
+        sessionFactory.setPackagesToScan(new String[]{"com.savelife.mvc.model"});
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

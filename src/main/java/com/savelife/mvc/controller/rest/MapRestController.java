@@ -1,13 +1,9 @@
 package com.savelife.mvc.controller.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.savelife.mvc.model.massaging.Data;
-import com.savelife.mvc.model.massaging.Massage;
-import com.savelife.mvc.model.massaging.device.Device;
-import com.savelife.mvc.service.device.DeviceService;
+import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.service.routing.RouteService;
 import com.savelife.mvc.service.sender.SenderService;
+import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.concurrent.Callable;
-
-import static com.savelife.mvc.model.storing.DevicesContainer.getInstance;
 
 @RestController
 public class MapRestController {
@@ -40,9 +32,9 @@ public class MapRestController {
     * interacting database device service
     * */
     @Autowired
-    DeviceService deviceService;
+    UserService userService;
 
-    @RequestMapping(value = {"/rest/"}, method = RequestMethod.GET)
+    /*@RequestMapping(value = {"/rest/"}, method = RequestMethod.GET)
     public ResponseEntity<String> print() throws UnsupportedEncodingException, FileNotFoundException {
         System.out.println("Inside the get request");
 
@@ -62,7 +54,16 @@ public class MapRestController {
 
         System.out.println("After request");
 
+        return new ResponseEntity<String>("asynchrone GET response ", HttpStatus.OK);
+    }*/
 
+    @RequestMapping(value = {"/rest/get/"}, method = RequestMethod.GET)
+    public ResponseEntity<String> get() {
+
+        UserEntity entity = new UserEntity();
+        entity.setToken("this is token");
+        entity.setUserRoleIdUserRole(1);
+        userService.save(entity);
 
         return new ResponseEntity<String>("asynchrone GET response ", HttpStatus.OK);
     }
@@ -72,13 +73,11 @@ public class MapRestController {
      * to add it to device map
     * */
     @RequestMapping(value = {"/rest/connect/"}, method = RequestMethod.POST)
-    public Callable<ResponseEntity<Void>> save(String token){
+    public Callable<ResponseEntity<Void>> save(String token) {
 
         return new Callable<ResponseEntity<Void>>() {
             @Override
             public ResponseEntity<Void> call() throws Exception {
-
-                    getInstance().put(token,new Device(token));
 
 
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -90,11 +89,11 @@ public class MapRestController {
     * processing put request from the device to update its token(to clean connect with it)
     * */
     @RequestMapping(value = {"/rest/connect/"}, method = RequestMethod.PUT)
-    public Callable<ResponseEntity<Void>> update(String token){
+    public Callable<ResponseEntity<Void>> update(String token) {
         return new Callable<ResponseEntity<Void>>() {
             @Override
             public ResponseEntity<Void> call() throws Exception {
-                if (deviceService.exist(token)){
+                if (userService.exist(token)) {
 
                 }
                 return new ResponseEntity<Void>(HttpStatus.OK);

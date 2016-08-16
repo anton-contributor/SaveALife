@@ -61,10 +61,11 @@ public class Circle {
 
     @Override
     public String toString() {
-        return "detection.Circle{" +
-                "centerX=" + centerX +
-                ", centerY=" + centerY +
-                ", radius=" + radius +
-                '}';
+        final StringBuilder sb = new StringBuilder("Circle{");
+        sb.append("centerX=").append(centerX);
+        sb.append(", centerY=").append(centerY);
+        sb.append(", radius=").append(radius);
+        sb.append('}');
+        return sb.toString();
     }
 }

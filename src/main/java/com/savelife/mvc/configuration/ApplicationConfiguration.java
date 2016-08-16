@@ -26,7 +26,7 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
     }
 
@@ -45,6 +45,4 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
         messageSource.setBasename("messages");
         return messageSource;
     }
-
-
 }

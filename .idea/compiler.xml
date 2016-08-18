@@ -26,6 +26,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="detection-api" target="1.8" />
+      <module name="massaging-api" target="1.8" />
       <module name="route-api" target="1.5" />
       <module name="SaveALife" target="1.8" />
     </bytecodeTargetLevel>

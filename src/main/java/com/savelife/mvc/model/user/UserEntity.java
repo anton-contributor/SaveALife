@@ -10,9 +10,11 @@ import javax.persistence.*;
 @IdClass(UserEntityPK.class)
 public class UserEntity {
 
-
     private long idUser;
     private String token;
+    private boolean enable;
+    private String latitude;
+    private String longitude;
     private int userRoleIdUserRole;
 
     public UserEntity() {
@@ -52,34 +54,30 @@ public class UserEntity {
         this.userRoleIdUserRole = userRoleIdUserRole;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserEntity that = (UserEntity) o;
-
-        if (idUser != that.idUser) return false;
-        if (userRoleIdUserRole != that.userRoleIdUserRole) return false;
-        if (token != null ? !token.equals(that.token) : that.token != null) return false;
-
-        return true;
+    @Column(name = "enable")
+    public boolean isEnable() {
+        return enable;
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (idUser ^ (idUser >>> 32));
-        result = 31 * result + (token != null ? token.hashCode() : 0);
-        result = 31 * result + userRoleIdUserRole;
-        return result;
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "idUser=" + idUser +
-                ", token='" + token + '\'' +
-                ", userRoleIdUserRole=" + userRoleIdUserRole +
-                '}';
+    @Column(name = "latitude")
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    @Column(name = "longitude")
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

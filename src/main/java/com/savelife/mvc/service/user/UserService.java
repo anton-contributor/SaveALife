@@ -15,6 +15,10 @@ public interface UserService {
 
     List<UserEntity> findAllUsers();
 
+    List<UserEntity> findAllByRole(String role);
+
+    void update(UserEntity entity);
+
     boolean exist(String token);
 
     void save(UserEntity userEntity);

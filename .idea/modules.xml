@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SaveALife.iml" filepath="$PROJECT_DIR$/SaveALife.iml" />
       <module fileurl="file://$PROJECT_DIR$/connection-api/connectionApi.iml" filepath="$PROJECT_DIR$/connection-api/connectionApi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/detection-api/detection-api.iml" filepath="$PROJECT_DIR$/detection-api/detection-api.iml" />
     </modules>
   </component>
 </project>

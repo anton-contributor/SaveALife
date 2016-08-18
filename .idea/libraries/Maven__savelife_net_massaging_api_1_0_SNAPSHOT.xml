@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Maven: savelife.net:massaging-api:1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/savelife/net/massaging-api/1.0-SNAPSHOT/massaging-api-1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/massaging-api/massaging-api-1.0-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/savelife/net/massaging-api/1.0-SNAPSHOT/massaging-api-1.0-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/massaging-api/massaging-api-1.0-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/savelife/net/massaging-api/1.0-SNAPSHOT/massaging-api-1.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

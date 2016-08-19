@@ -20,12 +20,12 @@
         <testng.version>6.9.4</testng.version>
         <mockito.version>1.10.19</mockito.version>
         <dbunit.version>2.2</dbunit.version>
-        <jackson-databind.version>2.8.0</jackson-databind.version>
+        <jackson-databind.version>2.5.3</jackson-databind.version>
         <jackson.version>2.5.3</jackson.version>
         <firebase.version>3.0.1</firebase.version>
         <apache.http.version>4.5.2</apache.http.version>
         <spring.data.version>1.3.6.RELEASE</spring.data.version>
-
+        <google.map.version>0.1.15</google.map.version>
     </properties>
 
 
@@ -130,6 +130,13 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${apache.http.version}</version>
+        </dependency>
+
+        <!-- google map api -->
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>${google.map.version}</version>
         </dependency>
 
     </dependencies>

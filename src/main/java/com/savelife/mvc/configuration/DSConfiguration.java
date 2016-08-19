@@ -6,6 +6,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
  * Created by anton on 27.07.16.
  */
 public class DSConfiguration extends AbstractAnnotationConfigDispatcherServletInitializer {
+
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{ApplicationConfiguration.class};
     }

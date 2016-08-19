@@ -11,7 +11,7 @@ public interface UserRoleDao {
 
     UserRoleEntity findRoleByName(String name);
 
-    UserRoleEntity findRoleById(Long id_user_role);
+    UserRoleEntity findRoleById(Integer id_user_role);
 
     List<UserRoleEntity> findAll();
 

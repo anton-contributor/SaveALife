@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public List<UserEntity> findAllByRole(String role) {
         List<UserEntity> list = new ArrayList<>();
         dao.findAllUsers().forEach((k) -> {
-            if (roleDao.findRoleById((long) k.getUserRoleIdUserRole()).getUserRole().equals(role)) {
+            if (roleDao.findRoleById(k.getUserRoleIdUserRole()).getUserRole().equals(role)) {
                 list.add(k);
             }
         });

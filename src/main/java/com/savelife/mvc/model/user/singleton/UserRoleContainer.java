@@ -1,8 +1,8 @@
 package com.savelife.mvc.model.user.singleton;
 
 
-import com.savelife.mvc.model.user.UserEntity;
-import com.savelife.mvc.service.user.UserService;
+import com.savelife.mvc.model.user.UserRoleEntity;
+import com.savelife.mvc.service.user.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserRoleContainer {
 
     @Autowired
-    private UserService userService;
+    private UserRoleService userRoleService;
 
     private Map<String, Integer> roles;
 
@@ -27,8 +27,8 @@ public class UserRoleContainer {
 
     private UserRoleContainer() {
         this.roles = new ConcurrentHashMap<>();
-        for (UserEntity c : userService.findAllUsers()) {
-            roles.put(c.getToken(), (int) c.getIdUser());
+        for (UserRoleEntity c : userRoleService.findAll()) {
+            roles.put(c.getUserRole(),c.getIdUserRole());
         }
     }
 }

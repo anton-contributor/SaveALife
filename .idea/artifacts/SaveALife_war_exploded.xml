@@ -60,9 +60,9 @@
           <element id="library" level="project" name="Maven: org.joda:joda-money:0.6" />
           <element id="library" level="project" name="Maven: org.jadira.usertype:usertype.spi:3.0.0.CR1" />
           <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.0" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.3" />
           <element id="library" level="project" name="Maven: com.google.firebase:firebase-server-sdk:3.0.1" />
           <element id="library" level="project" name="Maven: com.google.api-client:google-api-client-gson:1.21.0" />
           <element id="library" level="project" name="Maven: com.google.api-client:google-api-client:1.21.0" />
@@ -77,6 +77,9 @@
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5.2" />
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.4" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.9" />
+          <element id="library" level="project" name="Maven: com.google.maps:google-maps-services:0.1.15" />
+          <element id="library" level="project" name="Maven: com.squareup.okhttp:okhttp:2.7.5" />
+          <element id="library" level="project" name="Maven: com.squareup.okio:okio:1.6.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">

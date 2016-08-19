@@ -1,7 +1,9 @@
 package com.savelife.mvc.controller.rest;
 
 import com.savelife.mvc.model.massaging.device.DeviceMassage;
+import com.savelife.mvc.model.routing.NodeEntity;
 import com.savelife.mvc.model.user.UserEntity;
+import com.savelife.mvc.service.routing.RoutingService;
 import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import static com.savelife.mvc.model.user.singleton.UserRoleContainer.getRole;
@@ -29,6 +32,12 @@ public class UserRestController {
     * */
     @Autowired
     UserService userService;
+
+    /*
+    * route service
+    * */
+    @Autowired
+    RoutingService routingService;
 
     @RequestMapping(value = {"/rest/"}, method = RequestMethod.GET)
     public Callable<ResponseEntity<String>> print() throws UnsupportedEncodingException, FileNotFoundException {
@@ -51,6 +60,11 @@ public class UserRestController {
         System.out.println("After request");*/
 
         return () -> {
+
+            List<NodeEntity> entities = routingService.getRoute(50.459351, 30.514641, 50.455229, 30.512014);
+
+            entities.forEach((k)-> System.out.println(k.toString()));
+
             System.out.println(userService.findUserByToken("token"));
             return new ResponseEntity<String>("asynchrone GET response ", HttpStatus.OK);
         };
@@ -66,8 +80,11 @@ public class UserRestController {
             if (serverMassage.getRole() != null & serverMassage.getCurrentToken() != null) {
 
                 UserEntity entity = new UserEntity();
+
                 entity.setToken(serverMassage.getCurrentToken());
                 entity.setUserRoleIdUserRole(getRole(serverMassage.getRole()));
+                entity.setLatitude(String.valueOf(serverMassage.getCurrentLat()));
+                entity.setLongitude(String.valueOf(serverMassage.getCurrentLon()));
 
                 userService.save(entity);
                 return new ResponseEntity<Void>(HttpStatus.CREATED);

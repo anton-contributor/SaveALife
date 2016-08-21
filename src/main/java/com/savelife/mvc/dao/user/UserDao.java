@@ -11,12 +11,14 @@ public interface UserDao {
 
     UserEntity findUserByToken(String token);
 
-    UserEntity findUserById(Long id_user);
+    UserEntity findUserById(long id_user);
 
     List<UserEntity> findAllUsers();
 
     void save(UserEntity userEntity);
 
     void delete(UserEntity entity);
+
+    void deleteByToken(String token);
 
 }

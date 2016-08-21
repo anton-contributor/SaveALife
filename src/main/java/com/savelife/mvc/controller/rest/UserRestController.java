@@ -1,24 +1,18 @@
 package com.savelife.mvc.controller.rest;
 
 import com.savelife.mvc.model.massaging.device.DeviceMassage;
-import com.savelife.mvc.model.routing.NodeEntity;
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.service.routing.RoutingService;
+import com.savelife.mvc.service.user.UserRoleService;
 import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.concurrent.Callable;
-
-import static com.savelife.mvc.model.user.singleton.UserRoleContainer.getRole;
 
 /*
 * Registration user rest controller
@@ -38,6 +32,12 @@ public class UserRestController {
     * */
     @Autowired
     RoutingService routingService;
+
+    /*
+    * user role service
+    * */
+    @Autowired
+    UserRoleService userRoleService;
 
     @RequestMapping(value = {"/rest/"}, method = RequestMethod.GET)
     public Callable<ResponseEntity<String>> print() throws UnsupportedEncodingException, FileNotFoundException {
@@ -61,56 +61,78 @@ public class UserRestController {
 
         return () -> {
 
-            List<NodeEntity> entities = routingService.getRoute(50.459351, 30.514641, 50.455229, 30.512014);
-
-            entities.forEach((k)-> System.out.println(k.toString()));
-
-            System.out.println(userService.findUserByToken("token"));
+            System.out.println(userService.findUserById(1).getToken());
             return new ResponseEntity<String>("asynchrone GET response ", HttpStatus.OK);
         };
     }
 
     /*
-    * processing a post request from the device with its unique token
-     * to add it to device map
+    * save user
     * */
-    @RequestMapping(value = {"/rest/registration/"}, method = RequestMethod.POST)
-    public Callable<ResponseEntity<Void>> saveDevice(@RequestBody DeviceMassage serverMassage) {
+    @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.POST)
+    public Callable<ResponseEntity<Void>> saveUser(@RequestBody DeviceMassage deviceMassage) {
         return () -> {
-            if (serverMassage.getRole() != null & serverMassage.getCurrentToken() != null) {
+            String userToken = deviceMassage.getCurrentToken();
+            if (deviceMassage.getRole() != null & !userService.exist(userToken)) {
 
                 UserEntity entity = new UserEntity();
 
-                entity.setToken(serverMassage.getCurrentToken());
-                entity.setUserRoleIdUserRole(getRole(serverMassage.getRole()));
-                entity.setLatitude(String.valueOf(serverMassage.getCurrentLat()));
-                entity.setLongitude(String.valueOf(serverMassage.getCurrentLon()));
+                entity.setToken(userToken);
+                try {
+                    entity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));
+                } catch (NullPointerException e) {
+                    System.out.println("Incorrect user role: " + deviceMassage.getRole());
+                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                }
+
+//                entity.setUserRoleIdUserRole(getRole(deviceMassage.getRole()));
+                entity.setLatitude(String.valueOf(deviceMassage.getCurrentLat()));
+                entity.setLongitude(String.valueOf(deviceMassage.getCurrentLon()));
 
                 userService.save(entity);
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             } else {
-                return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+                System.out.println("Conflict -----------------------------------------------");
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
         };
     }
 
     /*
-    * processing put request from the device to update its token(to clean connect with it)
+    * update user
     * */
-    @RequestMapping(value = {"/rest/registration/"}, method = RequestMethod.PUT)
-    public Callable<ResponseEntity<Void>> updateDevice(@RequestBody DeviceMassage serverMassage) {
+    @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.PUT)
+    public Callable<ResponseEntity<UserEntity>> updateUser(@RequestBody DeviceMassage deviceMassage) {
         return () -> {
-            if (userService.exist(serverMassage.getCurrentToken())) {
+            try {
+                String oldToken = deviceMassage.getOldToken();
+                UserEntity userEntity = userService.findUserByToken(oldToken);
 
-                UserEntity userEntity = new UserEntity();
-                userEntity.setToken(serverMassage.getCurrentToken());
-                userEntity.setUserRoleIdUserRole(getRole(serverMassage.getRole()));
+                userEntity.setToken(deviceMassage.getCurrentToken());
+                userEntity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));
 
                 userService.update(userEntity);
-                return new ResponseEntity<Void>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);
+
+            } catch (NullPointerException e) {
+                return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
             }
+        };
+    }
+
+    /*
+    * delete user
+    * */
+    @RequestMapping(value = {"/rest/user/{token}"}, method = RequestMethod.DELETE)
+    public Callable<ResponseEntity<UserEntity>> deleteUser(@PathVariable("token") String token) {
+        return () -> {
+            UserEntity entity = userService.findUserByToken(token);
+            if (entity == null) {
+                System.out.println("User with token " + token + " not found");
+                return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
+            }
+            userService.deleteByToken(token);
+            return new ResponseEntity<UserEntity>(HttpStatus.NO_CONTENT);
         };
     }
 

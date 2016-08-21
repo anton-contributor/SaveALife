@@ -5,12 +5,14 @@ import com.savelife.mvc.model.user.UserRoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * Created by anton on 19.08.16.
  */
 @Service("userRoleService")
+@Transactional
 public class UserRoleServiceImpl implements UserRoleService {
 
     @Autowired
@@ -23,7 +25,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRoleEntity findRoleByName(String name_role) {
-        return null;
+        return dao.findRoleByName(name_role);
     }
 
     @Override

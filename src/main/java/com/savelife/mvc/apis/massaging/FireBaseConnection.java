@@ -1,5 +1,7 @@
 package com.savelife.mvc.apis.massaging;
 
+import com.savelife.mvc.apis.massaging.configuration.MassagingFireBaseContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -12,15 +14,8 @@ import java.util.List;
 @Component
 public class FireBaseConnection implements MassagingConnection,AbstractHttpConnection<String> {
 
-    /*
-    * fire base project key
-    * */
-    private final String fireBaseAppKey = "key=AIzaSyBJ6NYpCY-y3dhVCtnbPaNyBGn2oetce5M";
-
-    /*
-    * basic url to send the massages to the fire base cloud service
-    * */
-    private final String basicSendUrl = "https://fcm.googleapis.com/fcm/send";
+    @Autowired
+    private MassagingFireBaseContext context;
 
     @Override
     public List<String> echo(List<String> body) {
@@ -29,7 +24,7 @@ public class FireBaseConnection implements MassagingConnection,AbstractHttpConne
 
             body.forEach((k)->{
                 try {
-                    responses.add(postByURLJsonBody(basicSendUrl,fireBaseAppKey,k));
+                    responses.add(postByURLJsonBody(context.getConnectionUrl(),context.getApiKey(),k));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

@@ -17,7 +17,7 @@ public class UserRoleDaoImpl extends AbstractDao<Integer,UserRoleEntity> impleme
     @Override
     public UserRoleEntity findRoleByName(String name) {
         Criteria c = createEntityCriteria();
-        c.add(Restrictions.eq("role",name));
+        c.add(Restrictions.eq("user_role",name));
         return (UserRoleEntity) c.uniqueResult();
     }
 
@@ -29,7 +29,8 @@ public class UserRoleDaoImpl extends AbstractDao<Integer,UserRoleEntity> impleme
     @SuppressWarnings("uncheked")
     @Override
     public List<UserRoleEntity> findAll() {
-        return createEntityCriteria().list();
+        Criteria criteria = createEntityCriteria();
+        return (List<UserRoleEntity>) criteria.list();
     }
 
     @Override

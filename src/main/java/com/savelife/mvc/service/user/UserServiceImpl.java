@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findUserById(Long id_user) {
+    public UserEntity findUserById(long id_user) {
         return dao.findUserById(id_user);
     }
 
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public List<UserEntity> findAllByRole(String role) {
         List<UserEntity> list = new ArrayList<>();
         dao.findAllUsers().forEach((k) -> {
-            if (roleDao.findRoleById(k.getUserRoleIdUserRole()).getUserRole().equals(role)) {
+            if (roleDao.findRoleById(k.getUser_role().getId_user_role()).getUser_role().equals(role)) {
                 list.add(k);
             }
         });
@@ -65,6 +65,11 @@ public class UserServiceImpl implements UserService {
         dao.delete(entity);
     }
 
+    @Override
+    public void deleteByToken(String token) {
+        dao.deleteByToken(token);
+    }
+
     /*
      * Since the method is running with Transaction, No need to call hibernate update explicitly.
      * Just fetch the entity from db and update it with proper values within transaction.
@@ -75,9 +80,14 @@ public class UserServiceImpl implements UserService {
         UserEntity user = dao.findUserById(entity.getIdUser());
         if (user != null) {
             user.setToken(entity.getToken());
-            user.setUserRoleIdUserRole(entity.getUserRoleIdUserRole());
+            user.setUser_role(entity.getUser_role());
+            user.setLatitude(entity.getLatitude());
+            user.setLongitude(entity.getLongitude());
             user.setEnable(entity.isEnable());
+        }else {
+            System.out.println("Not_FOUND");
         }
+
     }
 
 

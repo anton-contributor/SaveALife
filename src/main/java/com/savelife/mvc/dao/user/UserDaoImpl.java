@@ -3,6 +3,7 @@ package com.savelife.mvc.dao.user;
 import com.savelife.mvc.dao.AbstractDao;
 import com.savelife.mvc.model.user.UserEntity;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +25,9 @@ public class UserDaoImpl extends AbstractDao<Long, UserEntity> implements UserDa
     }
 
     @Override
-    public UserEntity findUserById(Long id_user) {
-        return getByKey(id_user);
+    public UserEntity findUserById(long id_user) {
+        UserEntity userEntity = getByKey(id_user);
+        return userEntity;
     }
 
     @SuppressWarnings("unchecked")
@@ -42,5 +44,13 @@ public class UserDaoImpl extends AbstractDao<Long, UserEntity> implements UserDa
     @Override
     public void delete(UserEntity entity) {
         delete(entity);
+    }
+
+
+    @Override
+    public void deleteByToken(String token) {
+        Query query = getSession().createSQLQuery("delete from user WHERE token = :token");
+        query.setString("token",token);
+        query.executeUpdate();
     }
 }

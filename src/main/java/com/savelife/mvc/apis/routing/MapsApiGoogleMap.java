@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by anton on 19.08.16.
+ *
  */
 @Component
 public class MapsApiGoogleMap implements MapsApi {

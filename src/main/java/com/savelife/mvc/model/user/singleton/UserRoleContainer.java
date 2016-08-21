@@ -5,30 +5,26 @@ import com.savelife.mvc.model.user.UserRoleEntity;
 import com.savelife.mvc.service.user.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserRoleContainer {
 
     @Autowired
-    private UserRoleService userRoleService;
+    private static UserRoleService userRoleService;
 
-    private Map<String, Integer> roles;
+    private static Map<String, Integer> roles;
 
-    public static class UserRoleContainerHolder {
-
-        public static final UserRoleContainer HOLDER_INSTANCE = new UserRoleContainer();
-
+    static {
+        roles = new ConcurrentHashMap<>();
+        List<UserRoleEntity> entities = userRoleService.findAll();
+        entities.forEach((k)->roles.put(k.getUser_role(),k.getId_user_role()));
     }
 
     public static Integer getRole(String key) {
-        return UserRoleContainerHolder.HOLDER_INSTANCE.roles.get(key);
+        return roles.get(key);
     }
 
-    private UserRoleContainer() {
-        this.roles = new ConcurrentHashMap<>();
-        for (UserRoleEntity c : userRoleService.findAll()) {
-            roles.put(c.getUserRole(),c.getIdUserRole());
-        }
-    }
+
 }

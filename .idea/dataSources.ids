@@ -13,40 +13,52 @@
       <column id="4" parent="2" name="id_user">
         <mandatory>1</mandatory>
         <data-type>bigint(11)</data-type>
+        <sequence-identity>1</sequence-identity>
       </column>
       <column id="5" parent="2" name="token">
         <mandatory>1</mandatory>
         <data-type>varchar(45)</data-type>
       </column>
-      <column id="6" parent="2" name="user_role_id_user_role">
+      <column id="6" parent="2" name="latitude">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="7" parent="2" name="longitude">
+        <mandatory>1</mandatory>
+        <data-type>varchar(45)</data-type>
+      </column>
+      <column id="8" parent="2" name="enable">
+        <data-type>tinyint(1)</data-type>
+      </column>
+      <column id="9" parent="2" name="user_role_id_user_role">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
       </column>
-      <index id="7" parent="2" name="fk_user_user_role_idx">
+      <index id="10" parent="2" name="fk_user_user_role_idx">
         <columns>user_role_id_user_role</columns>
         <desc-columns></desc-columns>
       </index>
-      <key id="8" parent="2" name="PRIMARY">
+      <key id="11" parent="2" name="PRIMARY">
         <columns>id_user
 user_role_id_user_role</columns>
         <primary>1</primary>
       </key>
-      <foreign-key id="9" parent="2" name="fk_user_user_role">
+      <foreign-key id="12" parent="2" name="fk_user_user_role">
         <columns>user_role_id_user_role</columns>
         <ref-key>~.user_role.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
-      <column id="10" parent="3" name="id_user_role">
+      <column id="13" parent="3" name="id_user_role">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="11" parent="3" name="user_role">
+      <column id="14" parent="3" name="user_role">
         <mandatory>1</mandatory>
         <data-type>varchar(45)</data-type>
       </column>
-      <key id="12" parent="3" name="PRIMARY">
+      <key id="15" parent="3" name="PRIMARY">
         <columns>id_user_role</columns>
         <primary>1</primary>
       </key>

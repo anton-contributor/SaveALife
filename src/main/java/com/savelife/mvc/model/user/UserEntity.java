@@ -7,15 +7,28 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "user", schema = "savelife")
-@IdClass(UserEntityPK.class)
 public class UserEntity {
 
+    @Id
+    @Column(name = "id_user")
     private long idUser;
+
+    @Column(name = "token")
     private String token;
+
+    @Column(name = "enable")
     private boolean enable;
+
+    @Column(name = "latitude")
     private String latitude;
+
+    @Column(name = "longitude")
     private String longitude;
-    private int userRoleIdUserRole;
+
+    @ManyToOne
+    @JoinColumn(name = "user_role_id_user_role")
+    private UserRoleEntity user_role;
+
 
     public UserEntity() {
     }
@@ -24,8 +37,7 @@ public class UserEntity {
         this.token = token;
     }
 
-    @Id
-    @Column(name = "id_user")
+
     public long getIdUser() {
         return idUser;
     }
@@ -34,8 +46,6 @@ public class UserEntity {
         this.idUser = idUser;
     }
 
-    @Basic
-    @Column(name = "token")
     public String getToken() {
         return token;
     }
@@ -44,17 +54,6 @@ public class UserEntity {
         this.token = token;
     }
 
-    @Id
-    @Column(name = "user_role_id_user_role")
-    public int getUserRoleIdUserRole() {
-        return userRoleIdUserRole;
-    }
-
-    public void setUserRoleIdUserRole(int userRoleIdUserRole) {
-        this.userRoleIdUserRole = userRoleIdUserRole;
-    }
-
-    @Column(name = "enable")
     public boolean isEnable() {
         return enable;
     }
@@ -63,7 +62,6 @@ public class UserEntity {
         this.enable = enable;
     }
 
-    @Column(name = "latitude")
     public String getLatitude() {
         return latitude;
     }
@@ -72,7 +70,6 @@ public class UserEntity {
         this.latitude = latitude;
     }
 
-    @Column(name = "longitude")
     public String getLongitude() {
         return longitude;
     }
@@ -80,4 +77,14 @@ public class UserEntity {
     public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
+
+    public UserRoleEntity getUser_role() {
+        return user_role;
+    }
+
+    public void setUser_role(UserRoleEntity user_role) {
+        this.user_role = user_role;
+    }
+
+
 }

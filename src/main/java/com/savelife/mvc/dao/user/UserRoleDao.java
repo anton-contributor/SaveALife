@@ -15,7 +15,6 @@ public interface UserRoleDao {
 
     List<UserRoleEntity> findAll();
 
-
     void save(UserRoleEntity entity);
 
     void deleteRole(UserRoleEntity entity);

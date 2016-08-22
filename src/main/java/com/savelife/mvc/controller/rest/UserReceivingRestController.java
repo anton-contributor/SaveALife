@@ -1,12 +1,12 @@
 package com.savelife.mvc.controller.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.savelife.mvc.model.massaging.device.DeviceMassage;
 import com.savelife.mvc.model.massaging.server.Data;
 import com.savelife.mvc.model.massaging.server.ServerMassage;
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.service.detection.DetectService;
+import com.savelife.mvc.service.routing.RoutingService;
 import com.savelife.mvc.service.sender.SenderService;
 import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-
-import static com.savelife.mvc.model.user.singleton.UserRoleContainer.getRole;
 
 /**
  * Receiving devices data controller
@@ -47,15 +45,45 @@ public class UserReceivingRestController {
     @Autowired
     DetectService detectionService;
 
+    /*
+    * route service
+    * */
+    @Autowired
+    RoutingService routingService;
+
     @RequestMapping(value = {"/rest/send/"}, method = RequestMethod.POST)
-    public Callable<ResponseEntity<Void>> receive(@RequestBody DeviceMassage massage) {
+    public Callable<ResponseEntity<Void>> receive(@RequestBody DeviceMassage deviceMassage) {
         return () -> {
-            String role = massage.getRole();
+            String role = deviceMassage.getRole();
             if (role != null) {
-                if (getRole(role) == 1) {
-                   senderService.echo(convert(define(massage.getCurrentLat(),massage.getCurrentLon(), userService.findAllByRole(role))));
+                if (role.equals("ambulance")) {
+                    try {
+//                        senderService.send(convert(defineList(deviceMassage.getCurrentLat(), deviceMassage.getCurrentLon(), userService.findAllByRole(role))));
+                        convert(defineList(deviceMassage.getCurrentLat(), deviceMassage.getCurrentLon(), userService.findAllByRole("driver")))
+                               .forEach((v) -> System.out.println(v));
+
+                        senderService.send(convert(defineList(deviceMassage.getCurrentLat(), deviceMassage.getCurrentLon(), userService.findAllByRole("driver"))));
+                        return new ResponseEntity<Void>(HttpStatus.OK);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+                    }
+
+                } else if (role.equals("driver")) {
+
+                    String oldToken = deviceMassage.getOldToken();
+
+                    UserEntity userEntity = userService.findUserByToken(oldToken);
+                    userEntity.setCurrentLatitude(String.valueOf(deviceMassage.getCurrentLat()));
+                    userEntity.setCurrentLongitude(String.valueOf(deviceMassage.getCurrentLon()));
+
+                    userService.update(userEntity);
+                    return new ResponseEntity<Void>(HttpStatus.OK);
+                } else if (role.equals("person")) {
+
+                    return new ResponseEntity<Void>(HttpStatus.OK);
                 }
-                return new ResponseEntity<Void>(HttpStatus.OK);
+                return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
             }
@@ -63,42 +91,41 @@ public class UserReceivingRestController {
     }
 
     /*
-    * define devices which included into ambulance radius
+    * defineList devices which included into ambulance radius
     * */
-    private List<UserEntity> define(Double centerX, Double centerY,List<UserEntity> entities) {
+    private List<UserEntity> defineList(Double centerX, Double centerY, List<UserEntity> entities) {
         List<UserEntity> defined = new ArrayList<>();
 
-        entities.forEach((k)->{
-            if(detectionService.detect(
+        entities.forEach((k) -> {
+            if (detectionService.detect(
                     100.0,
                     centerX,
                     centerY,
-                    Double.valueOf(k.getLatitude()),
-                    Double.valueOf(k.getLongitude()))){
+                    Double.parseDouble(k.getCurrentLatitude()),
+                    Double.parseDouble(k.getCurrentLongitude()))) {
                 defined.add(k);
             }
         });
         return defined;
     }
-
-    /*
-    * convert all defined devices to sending them to drivers
-    * */
     private List<String> convert(List<UserEntity> entities){
         List<String> converted = new ArrayList<>();
 
-        entities.forEach((k)->{
+        entities.forEach((k) -> {
             ServerMassage m = new ServerMassage();
             m.setTo(k.getToken());
             Data d = new Data();
-            d.setMassage("Hi, would you like to rebuild your road path?");
+            d.setMassageBody("Hi, would you like to rebuild your road path?");
+
+            d.setPath(routingService.getRoute(Double.parseDouble(k.getCurrentLatitude())
+                    , Double.parseDouble(k.getCurrentLongitude())
+                    , Double.parseDouble(k.getDestinationLatitude())
+                    , Double.parseDouble(k.getDestinationLongitude()) ));
             m.setData(d);
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                converted.add(mapper.writeValueAsString(m));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+
+            Gson gson = new Gson();
+
+            converted.add(gson.toJson(m));
         });
 
         return converted;

@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public List<UserEntity> findAllByRole(String role) {
         List<UserEntity> list = new ArrayList<>();
         dao.findAllUsers().forEach((k) -> {
-            if (roleDao.findRoleById(k.getUser_role().getId_user_role()).getUser_role().equals(role)) {
+            if (k.getUser_role().getUser_role().equals(role)) {
                 list.add(k);
             }
         });
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.setToken(entity.getToken());
             user.setUser_role(entity.getUser_role());
-            user.setLatitude(entity.getLatitude());
-            user.setLongitude(entity.getLongitude());
+            user.setCurrentLatitude(entity.getCurrentLatitude());
+            user.setCurrentLongitude(entity.getCurrentLongitude());
             user.setEnable(entity.isEnable());
         }else {
             System.out.println("Not_FOUND");

@@ -2,7 +2,6 @@ package com.savelife.mvc.controller.rest;
 
 import com.savelife.mvc.model.massaging.device.DeviceMassage;
 import com.savelife.mvc.model.user.UserEntity;
-import com.savelife.mvc.service.routing.RoutingService;
 import com.savelife.mvc.service.user.UserRoleService;
 import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +26,7 @@ public class UserRestController {
     @Autowired
     UserService userService;
 
-    /*
-    * route service
-    * */
-    @Autowired
-    RoutingService routingService;
+
 
     /*
     * user role service
@@ -46,7 +41,7 @@ public class UserRestController {
         ServerMassage m = new ServerMassage();
         m.setCurrentToken("ebd9TtNVVIY:APA91bGyS26_wHJc6ZquBArgYCdPTeSaVlyodCkBrseUxKGVxMnTjG0OZt9t-W_7abe7t4a_NZFF-67tKIEsgyaPW7w9F8Jy9MzLu05SRHahizVRdRYUQnKs4a4IMlp9zKhok68xsn4L");
         Data d = new Data();
-        d.setMassage("Hi, would you like to rebuild your road path?");
+        d.setMassageBody("Hi, would you like to rebuild your road path?");
         m.setData(d);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -60,8 +55,8 @@ public class UserRestController {
         System.out.println("After request");*/
 
         return () -> {
-
-            System.out.println(userService.findUserById(1).getToken());
+            userRoleService.findAll().forEach((v)-> System.out.println(v.getUser_role()));
+//            System.out.println(getRole("ambulance"));
             return new ResponseEntity<String>("asynchrone GET response ", HttpStatus.OK);
         };
     }
@@ -70,7 +65,7 @@ public class UserRestController {
     * save user
     * */
     @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.POST)
-    public Callable<ResponseEntity<Void>> saveUser(@RequestBody DeviceMassage deviceMassage) {
+    public Callable<ResponseEntity<String>> saveUser(@RequestBody DeviceMassage deviceMassage) {
         return () -> {
             String userToken = deviceMassage.getCurrentToken();
             if (deviceMassage.getRole() != null & !userService.exist(userToken)) {
@@ -82,18 +77,17 @@ public class UserRestController {
                     entity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));
                 } catch (NullPointerException e) {
                     System.out.println("Incorrect user role: " + deviceMassage.getRole());
-                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                    return new ResponseEntity<String>("",HttpStatus.CONFLICT);
                 }
 
-//                entity.setUserRoleIdUserRole(getRole(deviceMassage.getRole()));
-                entity.setLatitude(String.valueOf(deviceMassage.getCurrentLat()));
-                entity.setLongitude(String.valueOf(deviceMassage.getCurrentLon()));
+                entity.setCurrentLatitude(String.valueOf(deviceMassage.getCurrentLat()));
+                entity.setCurrentLongitude(String.valueOf(deviceMassage.getCurrentLon()));
 
                 userService.save(entity);
-                return new ResponseEntity<Void>(HttpStatus.CREATED);
+                return new ResponseEntity<String>("currentIpAddress:8080",HttpStatus.CREATED);
             } else {
                 System.out.println("Conflict -----------------------------------------------");
-                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                return new ResponseEntity<String>("",HttpStatus.CONFLICT);
             }
         };
     }

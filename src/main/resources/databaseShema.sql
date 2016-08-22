@@ -33,8 +33,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `savelife`.`user` (
   `id_user` BIGINT(11) NOT NULL,
   `token` VARCHAR(45) NOT NULL,
-  `latitude` VARCHAR(45) NOT NULL,
-  `longitude` VARCHAR(45) NOT NULL,
+  `currentLatitude` VARCHAR(45) NOT NULL,
+  `currentLongitude` VARCHAR(45) NOT NULL,
   `enable` BOOLEAN,
   `user_role_id_user_role` INT NOT NULL,
   PRIMARY KEY (`id_user`, `user_role_id_user_role`),

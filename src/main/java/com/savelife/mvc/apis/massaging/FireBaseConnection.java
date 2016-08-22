@@ -18,7 +18,7 @@ public class FireBaseConnection implements MassagingConnection,AbstractHttpConne
     private MassagingFireBaseContext context;
 
     @Override
-    public List<String> echo(List<String> body) {
+    public List<String> send(List<String> body) {
 
         List<String> responses = new LinkedList<>();
 

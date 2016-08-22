@@ -1,13 +1,12 @@
 package com.savelife.mvc.apis.detection;
 
-
 import org.springframework.stereotype.Component;
 
 /**
- * Created by anton on 15.08.16.
+ * Created by anton on 22.08.16.
  */
 @Component
-public class DetectionNearby implements Detection<Double> {
+public class DetectList implements Detection<Double> {
 
     @Override
     public boolean detect(Double radius, Double centerX, Double centerY, Double pointX, Double pointY) {

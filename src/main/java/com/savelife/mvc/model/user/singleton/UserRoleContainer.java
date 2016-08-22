@@ -1,30 +1,36 @@
 package com.savelife.mvc.model.user.singleton;
 
 
-import com.savelife.mvc.model.user.UserRoleEntity;
 import com.savelife.mvc.service.user.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
+@Component
 public class UserRoleContainer {
 
     @Autowired
-    private static UserRoleService userRoleService;
+    private UserRoleService userRoleService;
 
-    private static Map<String, Integer> roles;
+    private Map<String, Integer> roles;
 
-    static {
-        roles = new ConcurrentHashMap<>();
-        List<UserRoleEntity> entities = userRoleService.findAll();
-        entities.forEach((k)->roles.put(k.getUser_role(),k.getId_user_role()));
+    public UserRoleContainer() {
+        /*this.roles = new ConcurrentHashMap<>();
+        List<UserRoleEntity> list = userRoleService.findAll();
+        list.forEach((k) -> {
+            roles.put(k.getUser_role(), k.getId_user_role());
+        });*/
+    }
+
+    public static class UserRoleContainerHolder {
+
+        public static final UserRoleContainer HOLDER_INSTANCE = new UserRoleContainer();
+
     }
 
     public static Integer getRole(String key) {
-        return roles.get(key);
+        return UserRoleContainerHolder.HOLDER_INSTANCE.roles.get(key);
     }
-
 
 }

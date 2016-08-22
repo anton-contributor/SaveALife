@@ -10,6 +10,6 @@ public interface MassagingConnection {
     /*
     * abstract method echo to send the massage
     **/
-    List<String> echo(List<String> body) throws UnsupportedEncodingException;
+    List<String> send(List<String> body) throws UnsupportedEncodingException;
 
 }

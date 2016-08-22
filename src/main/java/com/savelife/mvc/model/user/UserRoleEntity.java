@@ -44,4 +44,12 @@ public class UserRoleEntity {
         this.userEntities = userEntities;
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("UserRoleEntity{");
+        sb.append("id_user_role=").append(id_user_role);
+        sb.append(", user_role='").append(user_role).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

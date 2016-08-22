@@ -19,11 +19,17 @@ public class UserEntity {
     @Column(name = "enable")
     private boolean enable;
 
-    @Column(name = "latitude")
-    private String latitude;
+    @Column(name = "currentLatitude")
+    private String currentLatitude;
 
-    @Column(name = "longitude")
-    private String longitude;
+    @Column(name = "currentLongitude")
+    private String currentLongitude;
+
+    @Column(name = "destinationLatitude")
+    private String destinationLatitude;
+
+    @Column(name = "destinationLongitude")
+    private String destinationLongitude;
 
     @ManyToOne
     @JoinColumn(name = "user_role_id_user_role")
@@ -33,10 +39,25 @@ public class UserEntity {
     public UserEntity() {
     }
 
+    public String getDestinationLatitude() {
+        return destinationLatitude;
+    }
+
+    public void setDestinationLatitude(String destinationLatitude) {
+        this.destinationLatitude = destinationLatitude;
+    }
+
+    public String getDestinationLongitude() {
+        return destinationLongitude;
+    }
+
+    public void setDestinationLongitude(String destinationLongitude) {
+        this.destinationLongitude = destinationLongitude;
+    }
+
     public UserEntity(String token) {
         this.token = token;
     }
-
 
     public long getIdUser() {
         return idUser;
@@ -62,20 +83,20 @@ public class UserEntity {
         this.enable = enable;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getCurrentLatitude() {
+        return currentLatitude;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setCurrentLatitude(String currentLatitude) {
+        this.currentLatitude = currentLatitude;
     }
 
-    public String getLongitude() {
-        return longitude;
+    public String getCurrentLongitude() {
+        return currentLongitude;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setCurrentLongitude(String currentLongitude) {
+        this.currentLongitude = currentLongitude;
     }
 
     public UserRoleEntity getUser_role() {
@@ -86,5 +107,18 @@ public class UserEntity {
         this.user_role = user_role;
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("UserEntity{");
+        sb.append("idUser=").append(idUser);
+        sb.append(", token='").append(token).append('\'');
+        sb.append(", enable=").append(enable);
+        sb.append(", currentLatitude='").append(currentLatitude).append('\'');
+        sb.append(", currentLongitude='").append(currentLongitude).append('\'');
+        sb.append(", destinationLatitude='").append(destinationLatitude).append('\'');
+        sb.append(", destinationLongitude='").append(destinationLongitude).append('\'');
+        sb.append(", user_role=").append(user_role);
+        sb.append('}');
+        return sb.toString();
+    }
 }

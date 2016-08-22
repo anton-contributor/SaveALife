@@ -12,7 +12,6 @@ public class NodeEntity {
     @Column(name = "id_route")
     private Long id_node;
 
-
     @Column(name = "latitude")
     private double latitude;
 

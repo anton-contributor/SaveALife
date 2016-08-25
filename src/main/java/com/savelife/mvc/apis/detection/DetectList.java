@@ -1,17 +1,27 @@
 package com.savelife.mvc.apis.detection;
 
+import com.savelife.mvc.model.user.UserEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by anton on 22.08.16.
+ * Created by anton on 25.08.16.
  */
 @Component
-public class DetectList implements Detection<Double> {
+public class DetectList extends AbstractDetect implements Detection<Double, List<UserEntity>> {
 
     @Override
-    public boolean detect(Double radius, Double centerX, Double centerY, Double pointX, Double pointY) {
-        return (Math.pow(centerX - pointX, 2)
-                + Math.pow(centerY - pointY, 2)
-                <= Math.pow(radius, 2));
+    public List<UserEntity> detect(Double radius, Double centerX, Double centerY, List<UserEntity> devices) {
+        List<UserEntity> detected = new ArrayList<>();
+
+        devices.forEach((v) -> {
+            if (detection(radius, centerX, centerY, Double.parseDouble(v.getCurrentLatitude()), Double.parseDouble(v.getCurrentLongitude()))) {
+                detected.add(v);
+            }
+        });
+
+        return detected;
     }
 }

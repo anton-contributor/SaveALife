@@ -1,8 +1,11 @@
 package com.savelife.mvc.apis.massaging.configuration;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Created by anton on 20.08.16.
  */
+@Component
 public class MassagingFireBaseContext {
 
     /*

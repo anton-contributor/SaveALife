@@ -1,6 +1,6 @@
 package com.savelife.mvc.service.sender;
 
-import com.savelife.mvc.apis.massaging.MassagingConnection;
+import com.savelife.mvc.apis.massaging.MassageSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +14,8 @@ import java.util.List;
 public class SenderServiceImpl implements SenderService<String> {
 
     @Autowired
-    private MassagingConnection connection;
+    private MassageSender connection;
 
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<String> echo(List<String> body) throws UnsupportedEncodingException {
-        return connection.send(body);
-    }
 
     @Override
     public List<String> send(List<String> body) throws UnsupportedEncodingException {

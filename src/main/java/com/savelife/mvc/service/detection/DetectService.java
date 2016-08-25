@@ -1,9 +1,13 @@
 package com.savelife.mvc.service.detection;
 
-/**
- * Created by anton on 18.08.16.
- */
-public interface DetectService {
+import com.savelife.mvc.model.user.UserEntity;
 
-    boolean detect(Double radius, Double centerX, Double centerY, Double pointX, Double pointY);
+import java.util.List;
+
+/**
+ * Service to detect appropriate
+ */
+public interface DetectService<T> {
+
+    List<UserEntity> detect(T radius, T centerX, T centerY, List<UserEntity> devices);
 }

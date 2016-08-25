@@ -8,8 +8,6 @@ import java.util.List;
  */
 public interface SenderService<T extends String> {
 
-    List<T> echo(List<T> body) throws UnsupportedEncodingException;
-
     List<T> send(List<T> body) throws UnsupportedEncodingException;
 
 }

@@ -6,7 +6,8 @@ import java.util.List;
 /**
  * Created by anton on 01.08.16.
  */
-public interface MassagingConnection {
+@FunctionalInterface
+public interface MassageSender {
     /*
     * abstract method echo to send the massage
     **/

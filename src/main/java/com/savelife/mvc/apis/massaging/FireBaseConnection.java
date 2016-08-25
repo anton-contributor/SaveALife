@@ -12,7 +12,7 @@ import java.util.List;
  * Created by anton on 11.08.16.
  */
 @Component
-public class FireBaseConnection implements MassagingConnection,AbstractHttpConnection<String> {
+public class FireBaseConnection implements MassageSender,AbstractHttpConnection<String> {
 
     @Autowired
     private MassagingFireBaseContext context;

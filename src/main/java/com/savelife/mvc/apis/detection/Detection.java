@@ -3,8 +3,8 @@ package com.savelife.mvc.apis.detection;
 /**
  * Created by anton on 12.08.16.
  */
-public interface Detection<T> {
+public interface Detection<T,R> {
 
-    boolean detect(T radius, T centerX, T centerY, T pointX, T pointY);
+    R detect(T radius, T centerX, T centerY, R devices);
 
 }

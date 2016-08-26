@@ -1,12 +1,13 @@
 package com.savelife.mvc.service.user;
 
-import com.savelife.mvc.dao.user.UserDao;
-import com.savelife.mvc.dao.user.UserRoleDao;
 import com.savelife.mvc.model.user.UserEntity;
+import com.savelife.mvc.model.user.UserRoleEntity;
+import com.savelife.mvc.repository.UserRepository;
+import com.savelife.mvc.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,60 +15,60 @@ import java.util.List;
  * Created by anton on 16.08.16.
  */
 @Service("userService")
-@Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDao dao;
+    @Resource
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRoleDao roleDao;
+    private UserRoleRepository userRoleRepository;
 
     @Override
     public UserEntity findUserByToken(String token) {
-        return dao.findUserByToken(token);
+        return userRepository.findByToken(token);
     }
 
     @Override
-    public UserEntity findUserById(long id_user) {
-        return dao.findUserById(id_user);
+    public UserEntity findUserById(long idUser) {
+        return userRepository.findOne(idUser);
     }
 
     @Override
     public List<UserEntity> findAllUsers() {
-        return dao.findAllUsers();
+        return (List)userRepository.findAll();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<UserEntity> findAllByRole(String role) {
+        UserRoleEntity userRole = userRoleRepository.findByUserRole(role);
         List<UserEntity> list = new ArrayList<>();
-        dao.findAllUsers().forEach((k) -> {
-            if (k.getUser_role().getUser_role().equals(role)) {
-                list.add(k);
-            }
-        });
-        return list;
+//        dao.findAllUsers().forEach((k) -> {
+//            if (k.getUser_role().getUser_role().equals(role)) {
+//                list.add(k);
+//            }
+//        });
+        return userRepository.findAllByUserRole(userRole);
     }
 
     @Override
     public boolean exist(String token) {
-        return dao.findUserByToken(token) != null;
+        return userRepository.findByToken(token) != null;
     }
 
     @Override
     public void save(UserEntity userEntity) {
-        dao.save(userEntity);
+        userRepository.save(userEntity);
     }
 
     @Override
     public void delete(UserEntity entity) {
-        dao.delete(entity);
+        userRepository.delete(entity);
     }
 
     @Override
     public void deleteByToken(String token) {
-        dao.deleteByToken(token);
+        userRepository.deleteByToken(token);
     }
 
     /*
@@ -77,16 +78,8 @@ public class UserServiceImpl implements UserService {
      * */
     @Override
     public void update(UserEntity entity) {
-        UserEntity user = dao.findUserById(entity.getIdUser());
-        if (user != null) {
-            user.setToken(entity.getToken());
-            user.setUser_role(entity.getUser_role());
-            user.setCurrentLatitude(entity.getCurrentLatitude());
-            user.setCurrentLongitude(entity.getCurrentLongitude());
-            user.setEnable(entity.isEnable());
-        }else {
-            System.out.println("Not_FOUND");
-        }
+        userRepository.update(entity.getToken(), entity.getUserRole().getId(),
+                entity.getCurrentLatitude(), entity.getCurrentLongitude(), entity.isEnable(), entity.getIdUser());
 
     }
 

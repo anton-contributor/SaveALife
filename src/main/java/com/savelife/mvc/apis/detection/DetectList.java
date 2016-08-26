@@ -17,7 +17,7 @@ public class DetectList extends AbstractDetect implements Detection<Double, List
         List<UserEntity> detected = new ArrayList<>();
 
         devices.forEach((v) -> {
-            if (detection(radius, centerX, centerY, Double.parseDouble(v.getCurrentLatitude()), Double.parseDouble(v.getCurrentLongitude()))) {
+            if (detection(radius, centerX, centerY, v.getCurrentLatitude(), v.getCurrentLongitude())) {
                 detected.add(v);
             }
         });

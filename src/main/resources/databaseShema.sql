@@ -21,9 +21,9 @@ USE `savelife` ;
 -- Table `savelife`.`user_role`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `savelife`.`user_role` (
-  `id_user_role` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `user_role` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_user_role`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `savelife`.`user` (
   INDEX `fk_user_user_role_idx` (`user_role_id_user_role` ASC),
   CONSTRAINT `fk_user_user_role`
     FOREIGN KEY (`user_role_id_user_role`)
-    REFERENCES `savelife`.`user_role` (`id_user_role`)
+    REFERENCES `savelife`.`user_role` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

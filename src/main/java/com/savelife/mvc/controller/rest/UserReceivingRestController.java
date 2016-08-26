@@ -78,10 +78,11 @@ public class UserReceivingRestController {
                                     d.setMassageBody("Hi, would you like to rebuild your road path?");
 
                                     /*build path */
-                                    d.setPath(routingService.getRoute(Double.parseDouble(k.getCurrentLatitude())
-                                            , Double.parseDouble(k.getCurrentLongitude())
-                                            , Double.parseDouble(k.getDestinationLatitude())
-                                            , Double.parseDouble(k.getDestinationLongitude())));
+                                    d.setPath(routingService.getRoute(
+                                            k.getCurrentLatitude()
+                                            , k.getCurrentLongitude()
+                                            , k.getDestinationLatitude()
+                                            , k.getDestinationLongitude()));
                                     m.setData(d);
 
                                     /* convert into JSON format */
@@ -104,12 +105,31 @@ public class UserReceivingRestController {
                         String oldToken = deviceMassage.getOldToken();
 
                         UserEntity userEntity = userService.findUserByToken(oldToken);
-                        userEntity.setCurrentLatitude(String.valueOf(deviceCurrentLat));
-                        userEntity.setCurrentLongitude(String.valueOf(deviceCurrentLon));
+                        userEntity.setCurrentLatitude(deviceCurrentLat);
+                        userEntity.setCurrentLongitude(deviceCurrentLon);
 
                         userService.update(userEntity);
                         return new ResponseEntity<Void>(HttpStatus.OK);
                     } else if (role.equals("person")) {
+                        double radius = 1000.0;
+                        Converter<List<UserEntity>, List<String>> converter = (entities) -> {
+                            List<String> converted = new ArrayList<>();
+
+                            entities.forEach((k) -> {
+                                ServerMassage m = new ServerMassage();
+                                m.setTo(k.getToken());
+                                Data d = new Data();
+                                d.setMassageBody("Need a help due to the " + deviceMassage.getMassage());
+
+                                    /* convert into JSON format */
+                                Gson gson = new Gson();
+                                converted.add(gson.toJson(m));
+                            });
+                            return converted;
+                        };
+
+                        senderService.send(converter.convert(detectionService.detect(radius, deviceCurrentLat, deviceCurrentLon, userService.findAllUsers())))
+                                .forEach((v) -> System.out.println(v));
 
                         return new ResponseEntity<Void>(HttpStatus.OK);
                     }

@@ -39,20 +39,24 @@ public class UserRestController {
             @Override
             public ResponseEntity<String> call() throws Exception {
                 String userToken = deviceMassage.getCurrentToken();
+                String userRole = deviceMassage.getRole();
+
                 if (deviceMassage.getRole() != null & !userService.exist(userToken)) {
 
                     UserEntity entity = new UserEntity();
 
                     entity.setToken(userToken);
                     try {
-                        entity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));
+                        entity.setUserRole(userRoleService.findRoleByName(userRole));
                     } catch (NullPointerException e) {
-                        System.out.println("Incorrect user role: " + deviceMassage.getRole());
+                        System.out.println("Incorrect user role: " + userRole);
                         return new ResponseEntity<String>("", HttpStatus.CONFLICT);
                     }
-
-                    entity.setCurrentLatitude(String.valueOf(deviceMassage.getCurrentLat()));
-                    entity.setCurrentLongitude(String.valueOf(deviceMassage.getCurrentLon()));
+                    entity.setEnable(true);
+                    entity.setCurrentLatitude(deviceMassage.getCurrentLat());
+                    entity.setCurrentLongitude(deviceMassage.getCurrentLon());
+                    entity.setDestinationLatitude(deviceMassage.getDestinationLat());
+                    entity.setDestinationLongitude(deviceMassage.getDestinationLon());
 
                     userService.save(entity);
                     return new ResponseEntity<String>("", HttpStatus.CREATED);
@@ -75,7 +79,7 @@ public class UserRestController {
                 UserEntity userEntity = userService.findUserByToken(oldToken);
 
                 userEntity.setToken(deviceMassage.getCurrentToken());
-                userEntity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));
+                userEntity.setUserRole(userRoleService.findRoleByName(deviceMassage.getRole()));
 
                 userService.update(userEntity);
                 return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);

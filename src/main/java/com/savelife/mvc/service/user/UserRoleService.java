@@ -9,9 +9,7 @@ import java.util.List;
  */
 public interface UserRoleService {
 
-    UserRoleEntity findRoleById(Integer id_role);
-
-    UserRoleEntity findRoleByName(String name_role);
-
+    UserRoleEntity findRoleById(Integer id);
+    UserRoleEntity findRoleByName(String nameRole);
     List<UserRoleEntity> findAll();
 }

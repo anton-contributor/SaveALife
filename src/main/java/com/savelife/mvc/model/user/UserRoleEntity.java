@@ -29,6 +29,7 @@ public class UserRoleEntity {
         this.id = id_user_role;
     }
 
+
     public String getUser_role() {
         return userRole;
     }
@@ -37,6 +38,7 @@ public class UserRoleEntity {
         this.userRole = user_role;
     }
 
+
     public Set<UserEntity> getUserEntities() {
         return userEntities;
     }
@@ -44,6 +46,7 @@ public class UserRoleEntity {
     public void setUserEntities(Set<UserEntity> userEntities) {
         this.userEntities = userEntities;
     }
+
 
     @Override
     public String toString() {

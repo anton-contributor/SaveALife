@@ -45,7 +45,7 @@ public class TestUserSevice {
 
     @Test
     public void testFindUserByTokenFunction(){
-        Assert.assertNotNull(userService.findUserByToken("dydk_olZOro:APA91bESNztsWIF7Zal2uPa5r3IQmBTWGxdfdfgdvHn6qRh7PeuIdhKi7oOVTGQMslJQYF2ECXgIQh9WkNLjM-66b5YVRO_oWF7j342V876lIDbscXfw9_fnW9h-Jkr7Dh5Rvv-OvR_0senk"));
+        Assert.assertNotNull(userService.findUserByToken("Mon Aug 29 10:15:16 EEST 2016"));
     }
 
     @Test
@@ -71,11 +71,12 @@ public class TestUserSevice {
 
     @Test
     public void testUpdateFuntion(){
-        UserEntity userEntity = userService.findUserById(0);
-        userEntity.setToken(new Date().toString());
+        String currentDate = new Date().toString();
+        UserEntity userEntity = userService.findUserById(1);
+        userEntity.setToken(currentDate);
         userService.update(userEntity);
-        UserEntity secondUser = userService.findUserById(0);
-        Assert.assertNotEquals(userEntity.getToken(), secondUser.getToken());
+        UserEntity secondUser = userService.findUserById(1);
+        Assert.assertEquals(currentDate, secondUser.getToken());
     }
 
     @Test
@@ -103,13 +104,13 @@ public class TestUserSevice {
 
     public UserEntity newFieldUser(){
         UserEntity userEntity = new UserEntity();
-        userEntity.setCurrentLatitude(6.65656);
-        userEntity.setCurrentLongitude(6.65656);
-        userEntity.setDestinationLatitude(6.65656);
-        userEntity.setDestinationLongitude(6.65656);
+        userEntity.setCurrentLatitude(6.65656D);
+        userEntity.setCurrentLongitude(6.65656D);
+        userEntity.setDestinationLatitude(6.65656D);
+        userEntity.setDestinationLongitude(6.65656D);
         userEntity.setToken(new Date().toString());
         userEntity.setEnable(true);
-        //userEntity.setUserRole(userRoleService.findRoleById(2));
+        userEntity.setUserRole(userRoleService.findRoleById(2));
         return userEntity;
     }
 

@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idUser")
     private long idUser;
 
@@ -43,6 +43,7 @@ public class UserEntity {
         this.token = token;
     }
 
+
     public long getIdUser() {
         return idUser;
     }
@@ -50,6 +51,7 @@ public class UserEntity {
     public void setIdUser(long idUser) {
         this.idUser = idUser;
     }
+
 
     public String getToken() {
         return token;
@@ -59,6 +61,7 @@ public class UserEntity {
         this.token = token;
     }
 
+
     public boolean isEnable() {
         return enable;
     }
@@ -66,6 +69,7 @@ public class UserEntity {
     public void setEnable(boolean enable) {
         this.enable = enable;
     }
+
 
     public Double getCurrentLatitude() {
         return currentLatitude;
@@ -75,6 +79,7 @@ public class UserEntity {
         this.currentLatitude = currentLatitude;
     }
 
+
     public Double getCurrentLongitude() {
         return currentLongitude;
     }
@@ -82,6 +87,7 @@ public class UserEntity {
     public void setCurrentLongitude(Double currentLongitude) {
         this.currentLongitude = currentLongitude;
     }
+
 
     public Double getDestinationLatitude() {
         return destinationLatitude;
@@ -91,6 +97,7 @@ public class UserEntity {
         this.destinationLatitude = destinationLatitude;
     }
 
+
     public Double getDestinationLongitude() {
         return destinationLongitude;
     }
@@ -99,6 +106,7 @@ public class UserEntity {
         this.destinationLongitude = destinationLongitude;
     }
 
+
     public UserRoleEntity getUserRole() {
         return userRole;
     }
@@ -106,6 +114,7 @@ public class UserEntity {
     public void setUserRole(UserRoleEntity userRole) {
         this.userRole = userRole;
     }
+
 
     @Override
     public String toString() {

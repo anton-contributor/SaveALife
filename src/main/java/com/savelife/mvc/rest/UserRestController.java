@@ -1,4 +1,4 @@
-package com.savelife.mvc.controller.rest;
+package com.savelife.mvc.rest;
 
 import com.savelife.mvc.model.massaging.device.DeviceMassage;
 import com.savelife.mvc.model.user.UserEntity;
@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /*
@@ -30,11 +31,24 @@ public class UserRestController {
     @Autowired
     UserRoleService userRoleService;
 
+    @RequestMapping(value = {"/rest/get/"}, method = RequestMethod.GET)
+    public Callable<ResponseEntity<String>> get(String role) {
+        return new Callable<ResponseEntity<String>>() {
+            @Override
+            public ResponseEntity call() throws Exception {
+                userService.findAllByRole(role).forEach(v -> System.out.println(v.getToken()));
+                return new ResponseEntity(HttpStatus.OK);
+            }
+        };
+    }
+
     /*
     * save user
     * */
     @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.POST)
     public Callable<ResponseEntity<String>> saveUser(@RequestBody DeviceMassage deviceMassage) {
+        /* logger */
+        System.out.println(deviceMassage.toString());
         return new Callable<ResponseEntity<String>>() {
             @Override
             public ResponseEntity<String> call() throws Exception {
@@ -46,11 +60,13 @@ public class UserRestController {
                     UserEntity entity = new UserEntity();
 
                     entity.setToken(userToken);
+
                     try {
-                        entity.setUserRole(userRoleService.findRoleByName(userRole));
+                        entity.setUser_role(userRoleService.findRoleByName(userRole));
                     } catch (NullPointerException e) {
+                        /*logger */
                         System.out.println("Incorrect user role: " + userRole);
-                        return new ResponseEntity<String>("", HttpStatus.CONFLICT);
+                        return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
                     }
                     entity.setEnable(true);
                     entity.setCurrentLatitude(deviceMassage.getCurrentLat());
@@ -61,6 +77,7 @@ public class UserRestController {
                     userService.save(entity);
                     return new ResponseEntity<String>("", HttpStatus.CREATED);
                 } else {
+                    /* logger */
                     System.out.println("Conflict -----------------------------------------------");
                     return new ResponseEntity<String>("", HttpStatus.CONFLICT);
                 }
@@ -73,18 +90,30 @@ public class UserRestController {
     * */
     @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.PUT)
     public Callable<ResponseEntity<UserEntity>> updateUser(@RequestBody DeviceMassage deviceMassage) {
+        /*logger */
+        System.out.println(deviceMassage.toString());
         return () -> {
             try {
+                /* update only role*/
+                String currentRole = userService.findUserByToken(deviceMassage.getCurrentToken())
+                        .getUser_role()
+                        .getUser_role();
+                if (currentRole != null & !Objects.equals(currentRole, deviceMassage.getRole())) {
+
+                    UserEntity userEntity = userService.findUserByToken(deviceMassage.getCurrentToken());
+                    userEntity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));
+                    userService.update(userEntity);
+                }
+                /* update only token */
                 String oldToken = deviceMassage.getOldToken();
                 UserEntity userEntity = userService.findUserByToken(oldToken);
 
                 userEntity.setToken(deviceMassage.getCurrentToken());
-                userEntity.setUserRole(userRoleService.findRoleByName(deviceMassage.getRole()));
 
                 userService.update(userEntity);
                 return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);
-
             } catch (NullPointerException e) {
+                /*logger */
                 return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
             }
         };
@@ -95,9 +124,12 @@ public class UserRestController {
     * */
     @RequestMapping(value = {"/rest/user/{token}"}, method = RequestMethod.DELETE)
     public Callable<ResponseEntity<UserEntity>> deleteUser(@PathVariable("token") String token) {
+        /*logger*/
+        System.out.println(token);
         return () -> {
             UserEntity entity = userService.findUserByToken(token);
             if (entity == null) {
+                /*logger*/
                 System.out.println("User with token " + token + " not found");
                 return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
             }

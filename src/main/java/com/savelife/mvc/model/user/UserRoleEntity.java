@@ -10,31 +10,30 @@ import java.util.Set;
 @Entity
 @Table(name = "user_role", schema = "savelife")
 public class UserRoleEntity {
-
     @Id
     @Column(name = "id")
-    private Integer id;
+    private int id_user_role;
 
     @Column(name = "userRole")
-    private String userRole;
+    private String user_role;
 
-    @OneToMany(mappedBy = "userRole")
+    @OneToMany(mappedBy = "user_role")
     private Set<UserEntity> userEntities = new HashSet<UserEntity>();
 
-    public Integer getId() {
-        return id;
+    public int getId_user_role() {
+        return id_user_role;
     }
 
-    public void setId(Integer id_user_role) {
-        this.id = id_user_role;
+    public void setId_user_role(int id_user_role) {
+        this.id_user_role = id_user_role;
     }
 
     public String getUser_role() {
-        return userRole;
+        return user_role;
     }
 
     public void setUser_role(String user_role) {
-        this.userRole = user_role;
+        this.user_role = user_role;
     }
 
     public Set<UserEntity> getUserEntities() {
@@ -48,8 +47,8 @@ public class UserRoleEntity {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("UserRoleEntity{");
-        sb.append("id_user_role=").append(id);
-        sb.append(", user_role='").append(userRole).append('\'');
+        sb.append("id_user_role=").append(id_user_role);
+        sb.append(", user_role='").append(user_role).append('\'');
         sb.append('}');
         return sb.toString();
     }

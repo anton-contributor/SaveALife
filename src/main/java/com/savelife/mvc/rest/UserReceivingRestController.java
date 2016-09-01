@@ -1,4 +1,4 @@
-package com.savelife.mvc.controller.rest;
+package com.savelife.mvc.rest;
 
 import com.google.gson.Gson;
 import com.savelife.mvc.apis.converter.Converter;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
@@ -54,6 +55,8 @@ public class UserReceivingRestController {
 
     @RequestMapping(value = {"/rest/send/"}, method = RequestMethod.POST)
     public Callable<ResponseEntity<Void>> receive(@RequestBody DeviceMassage deviceMassage) {
+        /*logger */
+        System.out.println(deviceMassage.toString());
         return new Callable<ResponseEntity<Void>>() {
             @Override
             public ResponseEntity<Void> call() throws Exception {
@@ -64,8 +67,16 @@ public class UserReceivingRestController {
                         & deviceCurrentLat != null
                         & deviceCurrentLon != null) {
                     if (role.equals("ambulance")) {
-                        double radius = 100;
                         try {
+                            /* check the ambulance status(in race or complete)*/
+                            if (!Objects.isNull(deviceMassage.isEnable()) & !deviceMassage.isEnable()) {
+
+                                userService.setAllUsersUnable();
+
+                                return new ResponseEntity<Void>(HttpStatus.OK);
+                            }
+                            /* radius of the detection */
+                            double radius = 100;
                             System.out.println(deviceMassage.toString());
 
                             Converter<List<UserEntity>, List<String>> converter = (entities) -> {
@@ -76,8 +87,7 @@ public class UserReceivingRestController {
                                     m.setTo(k.getToken());
                                     Data d = new Data();
                                     d.setMassageBody("Hi, would you like to rebuild your road path?");
-
-                                    /*build path */
+                                    /* build path */
                                     d.setPath(routingService.getRoute(
                                             k.getCurrentLatitude()
                                             , k.getCurrentLongitude()
@@ -96,6 +106,7 @@ public class UserReceivingRestController {
                                     .forEach((v) -> System.out.println(v));
                             return new ResponseEntity<Void>(HttpStatus.OK);
                         } catch (NullPointerException e) {
+                            /*logger */
                             e.printStackTrace();
                             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
                         }
@@ -111,6 +122,7 @@ public class UserReceivingRestController {
                         userService.update(userEntity);
                         return new ResponseEntity<Void>(HttpStatus.OK);
                     } else if (role.equals("person")) {
+                        /* radius of the distance to notify the devices */
                         double radius = 1000.0;
                         Converter<List<UserEntity>, List<String>> converter = (entities) -> {
                             List<String> converted = new ArrayList<>();
@@ -127,16 +139,15 @@ public class UserReceivingRestController {
                             });
                             return converted;
                         };
-
                         senderService.send(converter.convert(detectionService.detect(radius, deviceCurrentLat, deviceCurrentLon, userService.findAllUsers())))
                                 .forEach((v) -> System.out.println(v));
-
                         return new ResponseEntity<Void>(HttpStatus.OK);
                     }
-
+                    /*logger */
                     /* no one correct role */
                     return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
                 } else {
+                    /*logger */
                     /*invalid massage fields */
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
                 }

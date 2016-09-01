@@ -18,6 +18,7 @@ public class SenderServiceImpl implements SenderService<String> {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<String> send(List<String> body) throws UnsupportedEncodingException {
         return connection.send(body);
     }

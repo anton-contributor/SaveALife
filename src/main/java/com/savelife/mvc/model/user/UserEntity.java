@@ -10,7 +10,6 @@ import javax.persistence.*;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "idUser")
     private long idUser;
 
@@ -34,13 +33,10 @@ public class UserEntity {
 
     @ManyToOne
     @JoinColumn(name = "userRoleID")
-    private UserRoleEntity userRole;
+    private UserRoleEntity user_role;
 
 
-    public UserEntity() {}
-
-    public UserEntity(String token) {
-        this.token = token;
+    public UserEntity() {
     }
 
     public long getIdUser() {
@@ -99,12 +95,12 @@ public class UserEntity {
         this.destinationLongitude = destinationLongitude;
     }
 
-    public UserRoleEntity getUserRole() {
-        return userRole;
+    public UserRoleEntity getUser_role() {
+        return user_role;
     }
 
-    public void setUserRole(UserRoleEntity userRole) {
-        this.userRole = userRole;
+    public void setUser_role(UserRoleEntity user_role) {
+        this.user_role = user_role;
     }
 
     @Override
@@ -117,7 +113,7 @@ public class UserEntity {
         sb.append(", currentLongitude='").append(currentLongitude).append('\'');
         sb.append(", destinationLatitude='").append(destinationLatitude).append('\'');
         sb.append(", destinationLongitude='").append(destinationLongitude).append('\'');
-        sb.append(", user_role=").append(userRole);
+        sb.append(", user_role=").append(user_role);
         sb.append('}');
         return sb.toString();
     }

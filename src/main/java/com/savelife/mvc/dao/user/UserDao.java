@@ -1,4 +1,4 @@
-package com.savelife.mvc.service.user;
+package com.savelife.mvc.dao.user;
 
 import com.savelife.mvc.model.user.UserEntity;
 
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by anton on 16.08.16.
  */
-public interface UserService {
+public interface UserDao {
 
     UserEntity findUserByToken(String token);
 
@@ -15,11 +15,9 @@ public interface UserService {
 
     List<UserEntity> findAllUsers();
 
-    List<UserEntity> findAllByRole(String role);
+    List<UserEntity> findAllEnable();
 
-    void update(UserEntity entity);
-
-    boolean exist(String token);
+    List<UserEntity> findAllUnable();
 
     void save(UserEntity userEntity);
 
@@ -27,7 +25,4 @@ public interface UserService {
 
     void deleteByToken(String token);
 
-    void setAllUsersUnable();
-
-    void setAllUsersEnable();
 }

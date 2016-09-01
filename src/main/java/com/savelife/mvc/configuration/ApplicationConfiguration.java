@@ -1,7 +1,7 @@
 package com.savelife.mvc.configuration;
 
 import com.google.maps.GeoApiContext;
-import com.savelife.mvc.apis.massaging.configuration.MassagingFireBaseContext;
+import com.savelife.mvc.apis.messaging.configuration.MassagingFireBaseContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

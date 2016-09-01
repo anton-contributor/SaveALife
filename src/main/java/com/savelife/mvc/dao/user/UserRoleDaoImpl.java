@@ -12,7 +12,7 @@ import java.util.List;
  * Created by anton on 16.08.16.
  */
 @Repository("userRoleDao")
-public class UserRoleDaoImpl extends AbstractDao<Integer,UserRoleEntity> implements UserRoleDao{
+public class UserRoleDaoImpl extends AbstractDao<Integer,UserRoleEntity> implements UserRoleDao {
 
     @Override
     public UserRoleEntity findRoleByName(String name) {

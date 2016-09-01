@@ -1,6 +1,6 @@
 package com.savelife.mvc.service.sender;
 
-import com.savelife.mvc.apis.massaging.MassageSender;
+import com.savelife.mvc.apis.messaging.MassageSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

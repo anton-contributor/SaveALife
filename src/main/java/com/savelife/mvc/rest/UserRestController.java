@@ -1,6 +1,6 @@
 package com.savelife.mvc.rest;
 
-import com.savelife.mvc.model.massaging.device.DeviceMassage;
+import com.savelife.mvc.model.messaging.device.DeviceMassage;
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.service.user.UserRoleService;
 import com.savelife.mvc.service.user.UserService;

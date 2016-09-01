@@ -97,6 +97,8 @@ public class UserServiceImpl implements UserService {
             user.setUser_role(entity.getUser_role());
             user.setCurrentLatitude(entity.getCurrentLatitude());
             user.setCurrentLongitude(entity.getCurrentLongitude());
+            user.setDestinationLatitude(entity.getDestinationLatitude());
+            user.setDestinationLongitude(entity.getDestinationLongitude());
             user.setEnable(entity.isEnable());
         } else {
             System.out.println("Not_FOUND");

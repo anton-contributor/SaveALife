@@ -2,13 +2,14 @@ package com.savelife.mvc.rest;
 
 import com.google.gson.Gson;
 import com.savelife.mvc.apis.converter.Converter;
-import com.savelife.mvc.model.massaging.device.DeviceMassage;
-import com.savelife.mvc.model.massaging.server.Data;
-import com.savelife.mvc.model.massaging.server.ServerMassage;
+import com.savelife.mvc.model.messaging.device.DeviceMassage;
+import com.savelife.mvc.model.messaging.server.Data;
+import com.savelife.mvc.model.messaging.server.ServerMassage;
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.service.detection.DetectService;
 import com.savelife.mvc.service.routing.RoutingService;
 import com.savelife.mvc.service.sender.SenderService;
+import com.savelife.mvc.service.user.UserRoleService;
 import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,12 @@ public class UserReceivingRestController {
     * */
     @Autowired
     RoutingService routingService;
+
+    /*
+    * user role service
+    * */
+    @Autowired
+    UserRoleService userRoleService;
 
     @RequestMapping(value = {"/rest/send/"}, method = RequestMethod.POST)
     public Callable<ResponseEntity<Void>> receive(@RequestBody DeviceMassage deviceMassage) {
@@ -113,17 +120,37 @@ public class UserReceivingRestController {
 
                     } else if (role.equals("driver")) {
                         /*update driver position */
-                        String oldToken = deviceMassage.getOldToken();
+                        String currentToken = deviceMassage.getCurrentToken();
+                        UserEntity userEntity = userService.findUserByToken(currentToken);
 
-                        UserEntity userEntity = userService.findUserByToken(oldToken);
-                        userEntity.setCurrentLatitude(deviceCurrentLat);
-                        userEntity.setCurrentLongitude(deviceCurrentLon);
-
-                        userService.update(userEntity);
-                        return new ResponseEntity<Void>(HttpStatus.OK);
+                        if (Objects.isNull(userEntity) & !userService.exist(currentToken)) {
+                            /* save driver */
+                            UserEntity newUser = new UserEntity();
+                            newUser.setToken(currentToken);
+                            newUser.setEnable(true);
+                            newUser.setUser_role(userRoleService.findRoleByName(role));
+                            newUser.setCurrentLatitude(deviceCurrentLat);
+                            newUser.setCurrentLongitude(deviceCurrentLon);
+                            newUser.setDestinationLatitude(deviceMassage.getDestinationLat());
+                            newUser.setDestinationLongitude(deviceMassage.getDestinationLon());
+                            userService.save(newUser);
+                            return new ResponseEntity<Void>(HttpStatus.CREATED);
+                        } else {
+                            /*update */
+                            System.out.println("updating -----------" + deviceMassage.toString());
+                            userEntity.setCurrentLatitude(deviceCurrentLat);
+                            userEntity.setCurrentLongitude(deviceCurrentLon);
+                            userEntity.setDestinationLatitude(deviceMassage.getDestinationLat());
+                            userEntity.setDestinationLongitude(deviceMassage.getDestinationLon());
+                            System.out.println("----" +
+                                    userEntity.toString());
+                            userService.update(userEntity);
+                            return new ResponseEntity<Void>(HttpStatus.OK);
+                        }
                     } else if (role.equals("person")) {
-                        /* radius of the distance to notify the devices */
-                        double radius = 1000.0;
+
+                        System.out.println("--------------------------------------" + deviceMassage.toString());
+                        double radius = 1000.0;//radius of the distance to notify the devices
                         Converter<List<UserEntity>, List<String>> converter = (entities) -> {
                             List<String> converted = new ArrayList<>();
 
@@ -131,7 +158,7 @@ public class UserReceivingRestController {
                                 ServerMassage m = new ServerMassage();
                                 m.setTo(k.getToken());
                                 Data d = new Data();
-                                d.setMassageBody("Need a help due to the " + deviceMassage.getMassage());
+                                d.setMassageBody("Need a help due to the " + deviceMassage.getMessage());
 
                                     /* convert into JSON format */
                                 Gson gson = new Gson();

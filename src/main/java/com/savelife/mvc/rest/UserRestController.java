@@ -62,7 +62,7 @@ public class UserRestController {
                     entity.setToken(userToken);
 
                     try {
-                        entity.setUser_role(userRoleService.findRoleByName(userRole));
+                        entity.setUserRole(userRoleService.findRoleByName(userRole));
                     } catch (NullPointerException e) {
                         /*logger */
                         System.out.println("Incorrect user role: " + userRole);
@@ -96,12 +96,12 @@ public class UserRestController {
             try {
                 /* update only role*/
                 String currentRole = userService.findUserByToken(deviceMassage.getCurrentToken())
-                        .getUser_role()
-                        .getUser_role();
+                        .getUserRole()
+                        .getUserRole();
                 if (currentRole != null & !Objects.equals(currentRole, deviceMassage.getRole())) {
 
                     UserEntity userEntity = userService.findUserByToken(deviceMassage.getCurrentToken());
-                    userEntity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));
+                    userEntity.setUserRole(userRoleService.findRoleByName(deviceMassage.getRole()));
                     userService.update(userEntity);
                 }
                 /* update only token */

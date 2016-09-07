@@ -31,9 +31,10 @@ public class UserEntity {
     @Column(name = "destinationLongitude")
     private Double destinationLongitude;
 
+
     @ManyToOne
     @JoinColumn(name = "userRoleID")
-    private UserRoleEntity user_role;
+    private UserRoleEntity userRole;
 
 
     public UserEntity() {
@@ -95,13 +96,14 @@ public class UserEntity {
         this.destinationLongitude = destinationLongitude;
     }
 
-    public UserRoleEntity getUser_role() {
-        return user_role;
+    public UserRoleEntity getUserRole() {
+        return userRole;
     }
 
-    public void setUser_role(UserRoleEntity user_role) {
-        this.user_role = user_role;
+    public void setUserRole(UserRoleEntity userRole) {
+        this.userRole = userRole;
     }
+
 
     @Override
     public String toString() {
@@ -113,7 +115,7 @@ public class UserEntity {
         sb.append(", currentLongitude='").append(currentLongitude).append('\'');
         sb.append(", destinationLatitude='").append(destinationLatitude).append('\'');
         sb.append(", destinationLongitude='").append(destinationLongitude).append('\'');
-        sb.append(", user_role=").append(user_role);
+        sb.append(", user_role=").append(userRole);
         sb.append('}');
         return sb.toString();
     }

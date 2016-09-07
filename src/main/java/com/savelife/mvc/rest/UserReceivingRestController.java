@@ -128,7 +128,7 @@ public class UserReceivingRestController {
                             UserEntity newUser = new UserEntity();
                             newUser.setToken(currentToken);
                             newUser.setEnable(true);
-                            newUser.setUser_role(userRoleService.findRoleByName(role));
+                            newUser.setUserRole(userRoleService.findRoleByName(role));
                             newUser.setCurrentLatitude(deviceCurrentLat);
                             newUser.setCurrentLongitude(deviceCurrentLon);
                             newUser.setDestinationLatitude(deviceMassage.getDestinationLat());
@@ -182,4 +182,5 @@ public class UserReceivingRestController {
         };
 
     }
+
 }

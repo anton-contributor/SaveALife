@@ -39,6 +39,16 @@ public class UserEntity {
     public UserEntity() {
     }
 
+    public UserEntity(String token, boolean enable, Double currentLatitude, Double currentLongitude, Double destinationLatitude, Double destinationLongitude, UserRoleEntity user_role) {
+        this.token = token;
+        this.enable = enable;
+        this.currentLatitude = currentLatitude;
+        this.currentLongitude = currentLongitude;
+        this.destinationLatitude = destinationLatitude;
+        this.destinationLongitude = destinationLongitude;
+        this.user_role = user_role;
+    }
+
     public long getIdUser() {
         return idUser;
     }

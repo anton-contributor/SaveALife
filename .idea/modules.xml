@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SaveALife.iml" filepath="$PROJECT_DIR$/SaveALife.iml" />
-      <module fileurl="file://$PROJECT_DIR$/connection-api/connectionApi.iml" filepath="$PROJECT_DIR$/connection-api/connectionApi.iml" />
     </modules>
   </component>
 </project>

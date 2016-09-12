@@ -55,7 +55,7 @@ public class UserRestController {
                 String userToken = deviceMassage.getCurrentToken();
                 String userRole = deviceMassage.getRole();
 
-                if (deviceMassage.getRole() != null & !userService.exist(userToken)) {
+                if (deviceMassage.getRole() != null && !userService.exist(userToken)) {
 
                     UserEntity entity = new UserEntity();
 
@@ -98,7 +98,7 @@ public class UserRestController {
                 String currentRole = userService.findUserByToken(deviceMassage.getCurrentToken())
                         .getUser_role()
                         .getUser_role();
-                if (currentRole != null & !Objects.equals(currentRole, deviceMassage.getRole())) {
+                if (currentRole != null && !Objects.equals(currentRole, deviceMassage.getRole())) {
 
                     UserEntity userEntity = userService.findUserByToken(deviceMassage.getCurrentToken());
                     userEntity.setUser_role(userRoleService.findRoleByName(deviceMassage.getRole()));

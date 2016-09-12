@@ -70,16 +70,15 @@ public class UserReceivingRestController {
                 String role = deviceMassage.getRole();
                 Double deviceCurrentLat = deviceMassage.getCurrentLat();
                 Double deviceCurrentLon = deviceMassage.getCurrentLon();
-                if (role != null
-                        & deviceCurrentLat != null
-                        & deviceCurrentLon != null) {
+                if (Objects.isNull(role)
+                        && Objects.isNull(deviceCurrentLat)
+                        && Objects.isNull(deviceCurrentLon)) {
                     if (role.equals("ambulance")) {
                         try {
                             /* check the ambulance status(in race or complete)*/
                             if (!Objects.isNull(deviceMassage.isEnable()) & !deviceMassage.isEnable()) {
 
                                 userService.setAllUsersUnable();
-
                                 return new ResponseEntity<Void>(HttpStatus.OK);
                             }
                             /* radius of the detection */
@@ -101,14 +100,12 @@ public class UserReceivingRestController {
                                             , k.getDestinationLatitude()
                                             , k.getDestinationLongitude()));
                                     m.setData(d);
-
                                     /* convert into JSON format */
                                     Gson gson = new Gson();
                                     converted.add(gson.toJson(m));
                                 });
                                 return converted;
                             };
-
                             senderService.send(converter.convert(detectionService.detect(radius, deviceCurrentLat, deviceCurrentLon, userService.findAllByRole("driver"))))
                                     .forEach((v) -> System.out.println(v));
                             return new ResponseEntity<Void>(HttpStatus.OK);
@@ -125,14 +122,15 @@ public class UserReceivingRestController {
 
                         if (Objects.isNull(userEntity) & !userService.exist(currentToken)) {
                             /* save driver */
-                            UserEntity newUser = new UserEntity();
-                            newUser.setToken(currentToken);
-                            newUser.setEnable(true);
-                            newUser.setUser_role(userRoleService.findRoleByName(role));
-                            newUser.setCurrentLatitude(deviceCurrentLat);
-                            newUser.setCurrentLongitude(deviceCurrentLon);
-                            newUser.setDestinationLatitude(deviceMassage.getDestinationLat());
-                            newUser.setDestinationLongitude(deviceMassage.getDestinationLon());
+                            UserEntity newUser = new UserEntity(
+                                    currentToken
+                                    , true
+                                    , deviceCurrentLat
+                                    , deviceCurrentLon
+                                    , deviceMassage.getDestinationLat()
+                                    , deviceMassage.getDestinationLon()
+                                    , userRoleService.findRoleByName(role)
+                            );
                             userService.save(newUser);
                             return new ResponseEntity<Void>(HttpStatus.CREATED);
                         } else {
@@ -159,7 +157,8 @@ public class UserReceivingRestController {
                                 m.setTo(k.getToken());
                                 Data d = new Data();
                                 d.setMassageBody("Need a help due to the " + deviceMassage.getMessage());
-
+                                d.setLatitude(deviceCurrentLat);
+                                d.setLongitude(deviceCurrentLon);
                                     /* convert into JSON format */
                                 Gson gson = new Gson();
                                 converted.add(gson.toJson(m));

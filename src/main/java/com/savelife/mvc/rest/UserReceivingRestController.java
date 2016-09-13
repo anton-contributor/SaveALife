@@ -62,29 +62,143 @@ public class UserReceivingRestController {
 
     @RequestMapping(value = {"/rest/send/"}, method = RequestMethod.POST)
     public Callable<ResponseEntity<Void>> receive(@RequestBody DeviceMassage deviceMassage) {
-        /*logger */
-        System.out.println(deviceMassage.toString());
+        /* logger */
         return new Callable<ResponseEntity<Void>>() {
             @Override
             public ResponseEntity<Void> call() throws Exception {
                 String role = deviceMassage.getRole();
-                Double deviceCurrentLat = deviceMassage.getCurrentLat();
-                Double deviceCurrentLon = deviceMassage.getCurrentLon();
-                if (role != null
-                        & deviceCurrentLat != null
-                        & deviceCurrentLon != null) {
-                    if (role.equals("ambulance")) {
-                        try {
+
+                if (!Objects.isNull(role)
+                        && !Objects.isNull(deviceMassage.getCurrentLat())
+                        && !Objects.isNull(deviceMassage.getCurrentLon())) {
+                    switch (role) {
+                        case "ambulance":
+                            /* find user by token */
+                            UserEntity ambulance = userService.findUserByToken(deviceMassage.getCurrentToken());
+                            if (!Objects.isNull(deviceMassage.getCurrentToken()) && !userService.exist(deviceMassage.getCurrentToken())) {
+                                /* save ambulance */
+                                UserEntity newAmbulance = new UserEntity(
+                                        deviceMassage.getCurrentToken()
+                                        , true
+                                        , deviceMassage.getCurrentLat()
+                                        , deviceMassage.getCurrentLon()
+                                        , deviceMassage.getDestinationLat()
+                                        , deviceMassage.getDestinationLon()
+                                        , userRoleService.findRoleByName(role)
+                                );
+                                userService.save(newAmbulance);
+                            } else {
+                                /*update ambulance */
+                                ambulance.setCurrentLatitude(deviceMassage.getCurrentLat());
+                                ambulance.setCurrentLongitude(deviceMassage.getCurrentLon());
+                                ambulance.setDestinationLatitude(deviceMassage.getDestinationLat());
+                                ambulance.setDestinationLongitude(deviceMassage.getDestinationLon());
+                                ambulance.setEnable(deviceMassage.isEnable());
+                                ambulance.setToken(deviceMassage.getCurrentToken());
+
+                                userService.update(ambulance);
+                            }
+                            try {
                             /* check the ambulance status(in race or complete)*/
-                            if (!Objects.isNull(deviceMassage.isEnable()) & !deviceMassage.isEnable()) {
+                                if (!Objects.isNull(deviceMassage.isEnable()) && deviceMassage.isEnable()) {
 
-                                userService.setAllUsersUnable();
+                                    userService.setAllUsersUnable();
+                                    return new ResponseEntity<Void>(HttpStatus.OK);
+                                }
+                                /* radius of the detection */
+                                double radius = 100;
+                                Converter<List<UserEntity>, List<String>> converter = (entities) -> {
+                                    List<String> converted = new ArrayList<>();
 
+                                    entities.forEach((k) -> {
+                                        ServerMassage m = new ServerMassage();
+                                        m.setTo(k.getToken());
+                                        Data d = new Data();
+                                        d.setMassageBody("Hi, would you like to rebuild your road path?");
+                                    /* build path */
+                                        d.setPath(routingService.getRoute(
+                                                k.getCurrentLatitude()
+                                                , k.getCurrentLongitude()
+                                                , k.getDestinationLatitude()
+                                                , k.getDestinationLongitude()));
+                                        m.setData(d);
+                                    /* convert into JSON format */
+                                        Gson gson = new Gson();
+                                        converted.add(gson.toJson(m));
+                                    });
+                                    return converted;
+                                };
+                                senderService.send(
+                                        converter.convert(
+                                                detectionService.detect(
+                                                        radius
+                                                        , deviceMassage.getCurrentLat()
+                                                        , deviceMassage.getCurrentLon()
+                                                        , userService.findAllByRole("driver"))));
+                                return new ResponseEntity<Void>(HttpStatus.OK);
+                            } catch (NullPointerException e) {
+                                /*logger */
+                                e.printStackTrace();
+                                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                            }
+
+                        case "driver":
+                            /*update driver position */
+                            String currentToken = deviceMassage.getCurrentToken();
+                            UserEntity userEntity = userService.findUserByToken(currentToken);
+
+                            if (!Objects.isNull(userEntity) && !userService.exist(currentToken)) {
+                            /* save driver */
+                                UserEntity newUser = new UserEntity(
+                                        currentToken
+                                        , true
+                                        , deviceMassage.getCurrentLat()
+                                        , deviceMassage.getCurrentLon()
+                                        , deviceMassage.getDestinationLat()
+                                        , deviceMassage.getDestinationLon()
+                                        , userRoleService.findRoleByName(role)
+                                );
+                                userService.save(newUser);
+                                return new ResponseEntity<Void>(HttpStatus.CREATED);
+                            } else {
+                                /*update driver*/
+                                userEntity.setCurrentLatitude(deviceMassage.getCurrentLat());
+                                userEntity.setCurrentLongitude(deviceMassage.getCurrentLon());
+                                userEntity.setDestinationLatitude(deviceMassage.getDestinationLat());
+                                userEntity.setDestinationLongitude(deviceMassage.getDestinationLon());
+                                userEntity.setEnable(deviceMassage.isEnable());
+                                userEntity.setToken(deviceMassage.getCurrentToken());
+
+                                userService.update(userEntity);
                                 return new ResponseEntity<Void>(HttpStatus.OK);
                             }
-                            /* radius of the detection */
-                            double radius = 100;
-                            System.out.println(deviceMassage.toString());
+                        case "person":
+
+                            UserEntity person = userService.findUserByToken(deviceMassage.getCurrentToken());
+                            if (!Objects.isNull(deviceMassage.getCurrentToken()) && !userService.exist(deviceMassage.getCurrentToken())) {
+                                 /*update person */
+                                person.setCurrentLatitude(deviceMassage.getCurrentLat());
+                                person.setCurrentLongitude(deviceMassage.getCurrentLon());
+                                person.setDestinationLatitude(deviceMassage.getDestinationLat());
+                                person.setDestinationLongitude(deviceMassage.getDestinationLon());
+                                person.setEnable(deviceMassage.isEnable());
+                                person.setToken(deviceMassage.getCurrentToken());
+
+                                userService.update(person);
+                            }else {
+                                /* save driver */
+                                UserEntity newUser = new UserEntity(
+                                          deviceMassage.getCurrentToken()
+                                        , true
+                                        , deviceMassage.getCurrentLat()
+                                        , deviceMassage.getCurrentLon()
+                                        , deviceMassage.getDestinationLat()
+                                        , deviceMassage.getDestinationLon()
+                                        , userRoleService.findRoleByName(role)
+                                );
+                                userService.save(newUser);
+                            }
+                            double radius = 1000.0;//radius of the distance to notify the devices
 
                             Converter<List<UserEntity>, List<String>> converter = (entities) -> {
                                 List<String> converted = new ArrayList<>();
@@ -93,82 +207,24 @@ public class UserReceivingRestController {
                                     ServerMassage m = new ServerMassage();
                                     m.setTo(k.getToken());
                                     Data d = new Data();
-                                    d.setMassageBody("Hi, would you like to rebuild your road path?");
-                                    /* build path */
-                                    d.setPath(routingService.getRoute(
-                                            k.getCurrentLatitude()
-                                            , k.getCurrentLongitude()
-                                            , k.getDestinationLatitude()
-                                            , k.getDestinationLongitude()));
-                                    m.setData(d);
-
+                                    d.setMassageBody("Need a help due to the " + deviceMassage.getMessage());
+                                    d.setLatitude(deviceMassage.getCurrentLat());
+                                    d.setLongitude(deviceMassage.getCurrentLon());
                                     /* convert into JSON format */
                                     Gson gson = new Gson();
                                     converted.add(gson.toJson(m));
                                 });
                                 return converted;
                             };
-
-                            senderService.send(converter.convert(detectionService.detect(radius, deviceCurrentLat, deviceCurrentLon, userService.findAllByRole("driver"))))
-                                    .forEach((v) -> System.out.println(v));
+                            /* send messages to everyone */
+                            senderService.send(
+                                    converter.convert(
+                                            detectionService.detect(
+                                                    radius,
+                                                    deviceMassage.getCurrentLat(),
+                                                    deviceMassage.getCurrentLon(),
+                                                    userService.findAllUsers())));// everyone
                             return new ResponseEntity<Void>(HttpStatus.OK);
-                        } catch (NullPointerException e) {
-                            /*logger */
-                            e.printStackTrace();
-                            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-                        }
-
-                    } else if (role.equals("driver")) {
-                        /*update driver position */
-                        String currentToken = deviceMassage.getCurrentToken();
-                        UserEntity userEntity = userService.findUserByToken(currentToken);
-
-                        if (Objects.isNull(userEntity) & !userService.exist(currentToken)) {
-                            /* save driver */
-                            UserEntity newUser = new UserEntity();
-                            newUser.setToken(currentToken);
-                            newUser.setEnable(true);
-                            newUser.setUserRole(userRoleService.findRoleByName(role));
-                            newUser.setCurrentLatitude(deviceCurrentLat);
-                            newUser.setCurrentLongitude(deviceCurrentLon);
-                            newUser.setDestinationLatitude(deviceMassage.getDestinationLat());
-                            newUser.setDestinationLongitude(deviceMassage.getDestinationLon());
-                            userService.save(newUser);
-                            return new ResponseEntity<Void>(HttpStatus.CREATED);
-                        } else {
-                            /*update */
-                            System.out.println("updating -----------" + deviceMassage.toString());
-                            userEntity.setCurrentLatitude(deviceCurrentLat);
-                            userEntity.setCurrentLongitude(deviceCurrentLon);
-                            userEntity.setDestinationLatitude(deviceMassage.getDestinationLat());
-                            userEntity.setDestinationLongitude(deviceMassage.getDestinationLon());
-                            System.out.println("----" +
-                                    userEntity.toString());
-                            userService.update(userEntity);
-                            return new ResponseEntity<Void>(HttpStatus.OK);
-                        }
-                    } else if (role.equals("person")) {
-
-                        System.out.println("--------------------------------------" + deviceMassage.toString());
-                        double radius = 1000.0;//radius of the distance to notify the devices
-                        Converter<List<UserEntity>, List<String>> converter = (entities) -> {
-                            List<String> converted = new ArrayList<>();
-
-                            entities.forEach((k) -> {
-                                ServerMassage m = new ServerMassage();
-                                m.setTo(k.getToken());
-                                Data d = new Data();
-                                d.setMassageBody("Need a help due to the " + deviceMassage.getMessage());
-
-                                    /* convert into JSON format */
-                                Gson gson = new Gson();
-                                converted.add(gson.toJson(m));
-                            });
-                            return converted;
-                        };
-                        senderService.send(converter.convert(detectionService.detect(radius, deviceCurrentLat, deviceCurrentLon, userService.findAllUsers())))
-                                .forEach((v) -> System.out.println(v));
-                        return new ResponseEntity<Void>(HttpStatus.OK);
                     }
                     /*logger */
                     /* no one correct role */
@@ -182,5 +238,4 @@ public class UserReceivingRestController {
         };
 
     }
-
 }

@@ -78,9 +78,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-
-    //// TODO: 9/5/16
     @Override
     public void setAllUsersUnable() {
         Iterable<UserEntity> all = userRepository.findAll();

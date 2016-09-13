@@ -31,7 +31,6 @@ public class UserEntity {
     @Column(name = "destinationLongitude")
     private Double destinationLongitude;
 
-
     @ManyToOne
     @JoinColumn(name = "userRoleID")
     private UserRoleEntity userRole;
@@ -40,6 +39,15 @@ public class UserEntity {
     public UserEntity() {
     }
 
+    public UserEntity(String token, boolean enable, Double currentLatitude, Double currentLongitude, Double destinationLatitude, Double destinationLongitude, UserRoleEntity userRole) {
+        this.token = token;
+        this.enable = enable;
+        this.currentLatitude = currentLatitude;
+        this.currentLongitude = currentLongitude;
+        this.destinationLatitude = destinationLatitude;
+        this.destinationLongitude = destinationLongitude;
+        this.userRole = userRole;
+    }
     public long getIdUser() {
         return idUser;
     }
@@ -104,19 +112,52 @@ public class UserEntity {
         this.userRole = userRole;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserEntity that = (UserEntity) o;
+
+        if (idUser != that.idUser) return false;
+        if (enable != that.enable) return false;
+        if (token != null ? !token.equals(that.token) : that.token != null) return false;
+        if (currentLatitude != null ? !currentLatitude.equals(that.currentLatitude) : that.currentLatitude != null)
+            return false;
+        if (currentLongitude != null ? !currentLongitude.equals(that.currentLongitude) : that.currentLongitude != null)
+            return false;
+        if (destinationLatitude != null ? !destinationLatitude.equals(that.destinationLatitude) : that.destinationLatitude != null)
+            return false;
+        if (destinationLongitude != null ? !destinationLongitude.equals(that.destinationLongitude) : that.destinationLongitude != null)
+            return false;
+        return userRole != null ? userRole.equals(that.userRole) : that.userRole == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (idUser ^ (idUser >>> 32));
+        result = 31 * result + (token != null ? token.hashCode() : 0);
+        result = 31 * result + (enable ? 1 : 0);
+        result = 31 * result + (currentLatitude != null ? currentLatitude.hashCode() : 0);
+        result = 31 * result + (currentLongitude != null ? currentLongitude.hashCode() : 0);
+        result = 31 * result + (destinationLatitude != null ? destinationLatitude.hashCode() : 0);
+        result = 31 * result + (destinationLongitude != null ? destinationLongitude.hashCode() : 0);
+        result = 31 * result + (userRole != null ? userRole.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("UserEntity{");
-        sb.append("idUser=").append(idUser);
-        sb.append(", token='").append(token).append('\'');
-        sb.append(", enable=").append(enable);
-        sb.append(", currentLatitude='").append(currentLatitude).append('\'');
-        sb.append(", currentLongitude='").append(currentLongitude).append('\'');
-        sb.append(", destinationLatitude='").append(destinationLatitude).append('\'');
-        sb.append(", destinationLongitude='").append(destinationLongitude).append('\'');
-        sb.append(", user_role=").append(userRole);
-        sb.append('}');
-        return sb.toString();
+        return "UserEntity{" +
+                "idUser=" + idUser +
+                ", token='" + token + '\'' +
+                ", enable=" + enable +
+                ", currentLatitude=" + currentLatitude +
+                ", currentLongitude=" + currentLongitude +
+                ", destinationLatitude=" + destinationLatitude +
+                ", destinationLongitude=" + destinationLongitude +
+                ", userRole=" + userRole +
+                '}';
     }
 }

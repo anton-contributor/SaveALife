@@ -85,7 +85,6 @@
             <version>${hibernate-validator.version}</version>
         </dependency>
 
-
         <!--mysql-connector-->
         <dependency>
             <groupId>mysql</groupId>
@@ -155,6 +154,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${springframework.version}</version>
+        </dependency>
+
+        <!-- logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
         </dependency>
     </dependencies>
 

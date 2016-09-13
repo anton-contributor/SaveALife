@@ -17,7 +17,26 @@ public class Data {
 
     private List<NodeEntity> path;
 
+    private double latitude;
+    private double longitude;
+
     public Data() {
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getMassageBody() {
@@ -43,6 +62,8 @@ public class Data {
 
         Data data = (Data) o;
 
+        if (Double.compare(data.latitude, latitude) != 0) return false;
+        if (Double.compare(data.longitude, longitude) != 0) return false;
         if (massageBody != null ? !massageBody.equals(data.massageBody) : data.massageBody != null) return false;
         return path != null ? path.equals(data.path) : data.path == null;
 
@@ -50,17 +71,24 @@ public class Data {
 
     @Override
     public int hashCode() {
-        int result = massageBody != null ? massageBody.hashCode() : 0;
+        int result;
+        long temp;
+        result = massageBody != null ? massageBody.hashCode() : 0;
         result = 31 * result + (path != null ? path.hashCode() : 0);
+        temp = Double.doubleToLongBits(latitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Data{");
-        sb.append("massageBody='").append(massageBody).append('\'');
-        sb.append(", path=").append(path);
-        sb.append('}');
-        return sb.toString();
+        return "Data{" +
+                "massageBody='" + massageBody + '\'' +
+                ", path=" + path +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }

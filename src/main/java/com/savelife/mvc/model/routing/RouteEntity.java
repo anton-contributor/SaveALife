@@ -3,22 +3,16 @@ package com.savelife.mvc.model.routing;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name = "route")
+
 public class RouteEntity {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id_route")
+
     private Long id_route;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_node", referencedColumnName = "id_route", nullable = false)
     private List<NodeEntity> wayNodes;
 
-    @Column(name = "distance")
     private int distanceInMeter;
-    @Column(name = "time")
+
     int time;
 
     public Long getId_route() {

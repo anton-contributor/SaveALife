@@ -25,6 +25,7 @@
         <firebase.version>3.0.1</firebase.version>
         <apache.http.version>4.5.2</apache.http.version>
         <google.map.version>0.1.15</google.map.version>
+        <jackson-databind.version>2.5.3</jackson-databind.version>
         <junit.version>4.12</junit.version>
     </properties>
     <dependencies>

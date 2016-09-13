@@ -3,7 +3,7 @@ package com.savelife.mvc.model.messaging.device;
 /**
  * Created by anton on 18.08.16.
  */
-public class DeviceMassage {
+public class DeviceMessage {
     /*
     * current token
     * */
@@ -49,7 +49,7 @@ public class DeviceMassage {
     * */
     private boolean enable;
 
-    public DeviceMassage() {
+    public DeviceMessage() {
     }
 
     public String getCurrentToken() {
@@ -129,7 +129,7 @@ public class DeviceMassage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DeviceMassage that = (DeviceMassage) o;
+        DeviceMessage that = (DeviceMessage) o;
 
         if (enable != that.enable) return false;
         if (currentToken != null ? !currentToken.equals(that.currentToken) : that.currentToken != null) return false;
@@ -161,7 +161,7 @@ public class DeviceMassage {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("DeviceMassage{");
+        final StringBuilder sb = new StringBuilder("DeviceMessage{");
         sb.append("currentToken='").append(currentToken).append('\'');
         sb.append(", oldToken='").append(oldToken).append('\'');
         sb.append(", currentLat=").append(currentLat);

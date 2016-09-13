@@ -2,9 +2,9 @@ package com.savelife.mvc.rest;
 
 import com.google.gson.Gson;
 import com.savelife.mvc.apis.converter.Converter;
-import com.savelife.mvc.model.messaging.device.DeviceMassage;
+import com.savelife.mvc.model.messaging.device.DeviceMessage;
 import com.savelife.mvc.model.messaging.server.Data;
-import com.savelife.mvc.model.messaging.server.ServerMassage;
+import com.savelife.mvc.model.messaging.server.ServerMessage;
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.service.detection.DetectService;
 import com.savelife.mvc.service.routing.RoutingService;
@@ -61,46 +61,24 @@ public class UserReceivingRestController {
     UserRoleService userRoleService;
 
     @RequestMapping(value = {"/rest/send/"}, method = RequestMethod.POST)
-    public Callable<ResponseEntity<Void>> receive(@RequestBody DeviceMassage deviceMassage) {
+    public Callable<ResponseEntity<Void>> receive(@RequestBody DeviceMessage deviceMessage) {
         /* logger */
+        System.out.println(deviceMessage.toString());
         return new Callable<ResponseEntity<Void>>() {
             @Override
             public ResponseEntity<Void> call() throws Exception {
-                String role = deviceMassage.getRole();
+                String role = deviceMessage.getRole();
 
-                if (!Objects.isNull(role)
-                        && !Objects.isNull(deviceMassage.getCurrentLat())
-                        && !Objects.isNull(deviceMassage.getCurrentLon())) {
+                if (role != null
+                        && deviceMessage.getCurrentLat() != null
+                        && deviceMessage.getCurrentLon()!= null) {
                     switch (role) {
                         case "ambulance":
                             /* find user by token */
-                            UserEntity ambulance = userService.findUserByToken(deviceMassage.getCurrentToken());
-                            if (!Objects.isNull(deviceMassage.getCurrentToken()) && !userService.exist(deviceMassage.getCurrentToken())) {
-                                /* save ambulance */
-                                UserEntity newAmbulance = new UserEntity(
-                                        deviceMassage.getCurrentToken()
-                                        , true
-                                        , deviceMassage.getCurrentLat()
-                                        , deviceMassage.getCurrentLon()
-                                        , deviceMassage.getDestinationLat()
-                                        , deviceMassage.getDestinationLon()
-                                        , userRoleService.findRoleByName(role)
-                                );
-                                userService.save(newAmbulance);
-                            } else {
-                                /*update ambulance */
-                                ambulance.setCurrentLatitude(deviceMassage.getCurrentLat());
-                                ambulance.setCurrentLongitude(deviceMassage.getCurrentLon());
-                                ambulance.setDestinationLatitude(deviceMassage.getDestinationLat());
-                                ambulance.setDestinationLongitude(deviceMassage.getDestinationLon());
-                                ambulance.setEnable(deviceMassage.isEnable());
-                                ambulance.setToken(deviceMassage.getCurrentToken());
 
-                                userService.update(ambulance);
-                            }
                             try {
                             /* check the ambulance status(in race or complete)*/
-                                if (!Objects.isNull(deviceMassage.isEnable()) && deviceMassage.isEnable()) {
+                                if (!deviceMessage.isEnable() && deviceMessage.isEnable()) {
 
                                     userService.setAllUsersUnable();
                                     return new ResponseEntity<Void>(HttpStatus.OK);
@@ -111,10 +89,10 @@ public class UserReceivingRestController {
                                     List<String> converted = new ArrayList<>();
 
                                     entities.forEach((k) -> {
-                                        ServerMassage m = new ServerMassage();
+                                        ServerMessage m = new ServerMessage();
                                         m.setTo(k.getToken());
                                         Data d = new Data();
-                                        d.setMassageBody("Hi, would you like to rebuild your road path?");
+                                        d.setMessageBody("Hi, would you like to rebuild your road path?");
                                     /* build path */
                                         d.setPath(routingService.getRoute(
                                                 k.getCurrentLatitude()
@@ -132,8 +110,8 @@ public class UserReceivingRestController {
                                         converter.convert(
                                                 detectionService.detect(
                                                         radius
-                                                        , deviceMassage.getCurrentLat()
-                                                        , deviceMassage.getCurrentLon()
+                                                        , deviceMessage.getCurrentLat()
+                                                        , deviceMessage.getCurrentLon()
                                                         , userService.findAllByRole("driver"))));
                                 return new ResponseEntity<Void>(HttpStatus.OK);
                             } catch (NullPointerException e) {
@@ -143,76 +121,81 @@ public class UserReceivingRestController {
                             }
 
                         case "driver":
-                            /*update driver position */
-                            String currentToken = deviceMassage.getCurrentToken();
-                            UserEntity userEntity = userService.findUserByToken(currentToken);
 
-                            if (!Objects.isNull(userEntity) && !userService.exist(currentToken)) {
+                            String currentToken = deviceMessage.getCurrentToken();
+
+                            if (currentToken != null && !userService.exist(currentToken)) {
                             /* save driver */
                                 UserEntity newUser = new UserEntity(
                                         currentToken
                                         , true
-                                        , deviceMassage.getCurrentLat()
-                                        , deviceMassage.getCurrentLon()
-                                        , deviceMassage.getDestinationLat()
-                                        , deviceMassage.getDestinationLon()
+                                        , deviceMessage.getCurrentLat()
+                                        , deviceMessage.getCurrentLon()
+                                        , deviceMessage.getDestinationLat()
+                                        , deviceMessage.getDestinationLon()
                                         , userRoleService.findRoleByName(role)
                                 );
                                 userService.save(newUser);
                                 return new ResponseEntity<Void>(HttpStatus.CREATED);
                             } else {
+                                UserEntity userEntity = userService.findUserByToken(currentToken);
                                 /*update driver*/
-                                userEntity.setCurrentLatitude(deviceMassage.getCurrentLat());
-                                userEntity.setCurrentLongitude(deviceMassage.getCurrentLon());
-                                userEntity.setDestinationLatitude(deviceMassage.getDestinationLat());
-                                userEntity.setDestinationLongitude(deviceMassage.getDestinationLon());
-                                userEntity.setEnable(deviceMassage.isEnable());
-                                userEntity.setToken(deviceMassage.getCurrentToken());
+                                userEntity.setCurrentLatitude(deviceMessage.getCurrentLat());
+                                userEntity.setCurrentLongitude(deviceMessage.getCurrentLon());
+                                userEntity.setDestinationLatitude(deviceMessage.getDestinationLat());
+                                userEntity.setDestinationLongitude(deviceMessage.getDestinationLon());
+                                userEntity.setEnable(deviceMessage.isEnable());
+                                userEntity.setToken(deviceMessage.getCurrentToken());
 
                                 userService.update(userEntity);
                                 return new ResponseEntity<Void>(HttpStatus.OK);
                             }
                         case "person":
 
-                            UserEntity person = userService.findUserByToken(deviceMassage.getCurrentToken());
-                            if (!Objects.isNull(deviceMassage.getCurrentToken()) && !userService.exist(deviceMassage.getCurrentToken())) {
+                            if (deviceMessage.getCurrentToken() != null && userService.exist(deviceMessage.getCurrentToken())) {
                                  /*update person */
-                                person.setCurrentLatitude(deviceMassage.getCurrentLat());
-                                person.setCurrentLongitude(deviceMassage.getCurrentLon());
-                                person.setDestinationLatitude(deviceMassage.getDestinationLat());
-                                person.setDestinationLongitude(deviceMassage.getDestinationLon());
-                                person.setEnable(deviceMassage.isEnable());
-                                person.setToken(deviceMassage.getCurrentToken());
+                                UserEntity person = userService.findUserByToken(deviceMessage.getCurrentToken());
+                                person.setCurrentLatitude(deviceMessage.getCurrentLat());
+                                person.setCurrentLongitude(deviceMessage.getCurrentLon());
+                                person.setDestinationLatitude(deviceMessage.getDestinationLat());
+                                person.setDestinationLongitude(deviceMessage.getDestinationLon());
+                                person.setEnable(deviceMessage.isEnable());
+                                person.setToken(deviceMessage.getCurrentToken());
 
                                 userService.update(person);
                             }else {
                                 /* save driver */
                                 UserEntity newUser = new UserEntity(
-                                          deviceMassage.getCurrentToken()
+                                          deviceMessage.getCurrentToken()
                                         , true
-                                        , deviceMassage.getCurrentLat()
-                                        , deviceMassage.getCurrentLon()
-                                        , deviceMassage.getDestinationLat()
-                                        , deviceMassage.getDestinationLon()
+                                        , deviceMessage.getCurrentLat()
+                                        , deviceMessage.getCurrentLon()
+                                        , deviceMessage.getDestinationLat()
+                                        , deviceMessage.getDestinationLon()
                                         , userRoleService.findRoleByName(role)
                                 );
                                 userService.save(newUser);
                             }
                             double radius = 1000.0;//radius of the distance to notify the devices
 
+                            System.out.println("converting ");
                             Converter<List<UserEntity>, List<String>> converter = (entities) -> {
                                 List<String> converted = new ArrayList<>();
 
                                 entities.forEach((k) -> {
-                                    ServerMassage m = new ServerMassage();
+                                    ServerMessage m = new ServerMessage();
                                     m.setTo(k.getToken());
                                     Data d = new Data();
-                                    d.setMassageBody("Need a help due to the " + deviceMassage.getMessage());
-                                    d.setLatitude(deviceMassage.getCurrentLat());
-                                    d.setLongitude(deviceMassage.getCurrentLon());
+                                    System.out.println(deviceMessage.getMessage());
+                                    d.setMessageBody("Need a help due to the " + deviceMessage.getMessage());
+                                    d.setLatitude(deviceMessage.getCurrentLat());
+                                    d.setLongitude(deviceMessage.getCurrentLon());
+
+                                    m.setData(d);
                                     /* convert into JSON format */
                                     Gson gson = new Gson();
                                     converted.add(gson.toJson(m));
+                                    System.out.println(m.toString());
                                 });
                                 return converted;
                             };
@@ -221,8 +204,8 @@ public class UserReceivingRestController {
                                     converter.convert(
                                             detectionService.detect(
                                                     radius,
-                                                    deviceMassage.getCurrentLat(),
-                                                    deviceMassage.getCurrentLon(),
+                                                    deviceMessage.getCurrentLat(),
+                                                    deviceMessage.getCurrentLon(),
                                                     userService.findAllUsers())));// everyone
                             return new ResponseEntity<Void>(HttpStatus.OK);
                     }

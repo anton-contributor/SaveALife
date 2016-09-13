@@ -1,6 +1,6 @@
 package com.savelife.mvc.rest;
 
-import com.savelife.mvc.model.messaging.device.DeviceMassage;
+import com.savelife.mvc.model.messaging.device.DeviceMessage;
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.service.user.UserRoleService;
 import com.savelife.mvc.service.user.UserService;
@@ -46,16 +46,16 @@ public class UserRestController {
     * save user
     * */
     @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.POST)
-    public Callable<ResponseEntity<String>> saveUser(@RequestBody DeviceMassage deviceMassage) {
+    public Callable<ResponseEntity<String>> saveUser(@RequestBody DeviceMessage deviceMessage) {
         /* logger */
-        System.out.println(deviceMassage.toString());
+        System.out.println(deviceMessage.toString());
         return new Callable<ResponseEntity<String>>() {
             @Override
             public ResponseEntity<String> call() throws Exception {
-                String userToken = deviceMassage.getCurrentToken();
-                String userRole = deviceMassage.getRole();
+                String userToken = deviceMessage.getCurrentToken();
+                String userRole = deviceMessage.getRole();
 
-                if (deviceMassage.getRole() != null & !userService.exist(userToken)) {
+                if (deviceMessage.getRole() != null & !userService.exist(userToken)) {
 
                     UserEntity entity = new UserEntity();
 
@@ -69,10 +69,10 @@ public class UserRestController {
                         return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
                     }
                     entity.setEnable(true);
-                    entity.setCurrentLatitude(deviceMassage.getCurrentLat());
-                    entity.setCurrentLongitude(deviceMassage.getCurrentLon());
-                    entity.setDestinationLatitude(deviceMassage.getDestinationLat());
-                    entity.setDestinationLongitude(deviceMassage.getDestinationLon());
+                    entity.setCurrentLatitude(deviceMessage.getCurrentLat());
+                    entity.setCurrentLongitude(deviceMessage.getCurrentLon());
+                    entity.setDestinationLatitude(deviceMessage.getDestinationLat());
+                    entity.setDestinationLongitude(deviceMessage.getDestinationLon());
 
                     userService.save(entity);
                     return new ResponseEntity<String>("", HttpStatus.CREATED);
@@ -89,26 +89,26 @@ public class UserRestController {
     * update user
     * */
     @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.PUT)
-    public Callable<ResponseEntity<UserEntity>> updateUser(@RequestBody DeviceMassage deviceMassage) {
+    public Callable<ResponseEntity<UserEntity>> updateUser(@RequestBody DeviceMessage deviceMessage) {
         /*logger */
-        System.out.println(deviceMassage.toString());
+        System.out.println(deviceMessage.toString());
         return () -> {
             try {
                 /* update only role*/
-                String currentRole = userService.findUserByToken(deviceMassage.getCurrentToken())
+                String currentRole = userService.findUserByToken(deviceMessage.getCurrentToken())
                         .getUserRole()
                         .getUserRole();
-                if (currentRole != null & !Objects.equals(currentRole, deviceMassage.getRole())) {
+                if (currentRole != null & !Objects.equals(currentRole, deviceMessage.getRole())) {
 
-                    UserEntity userEntity = userService.findUserByToken(deviceMassage.getCurrentToken());
-                    userEntity.setUserRole(userRoleService.findRoleByName(deviceMassage.getRole()));
+                    UserEntity userEntity = userService.findUserByToken(deviceMessage.getCurrentToken());
+                    userEntity.setUserRole(userRoleService.findRoleByName(deviceMessage.getRole()));
                     userService.update(userEntity);
                 }
                 /* update only token */
-                String oldToken = deviceMassage.getOldToken();
+                String oldToken = deviceMessage.getOldToken();
                 UserEntity userEntity = userService.findUserByToken(oldToken);
 
-                userEntity.setToken(deviceMassage.getCurrentToken());
+                userEntity.setToken(deviceMessage.getCurrentToken());
 
                 userService.update(userEntity);
                 return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);

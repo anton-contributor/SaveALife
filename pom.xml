@@ -12,59 +12,32 @@
 
 
     <properties>
-        <version>1.0</version>
         <springframework.version>4.3.2.RELEASE</springframework.version>
+        <springdata.version>1.10.2.RELEASE</springdata.version>
+        <hibernate.version>4.3.6.Final</hibernate.version>
+        <validetion-api.version>1.1.0.Final</validetion-api.version>
+        <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
         <mysql.connector.version>5.1.31</mysql.connector.version>
         <joda-time.version>2.3</joda-time.version>
-        <testng.version>6.9.4</testng.version>
-        <mockito.version>1.10.19</mockito.version>
-        <dbunit.version>2.2</dbunit.version>
+        <jadira.usertype.version>3.0.0.CR1</jadira.usertype.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
         <jackson-databind.version>2.5.3</jackson-databind.version>
-        <jackson.version>2.5.3</jackson.version>
+        <gson.version>2.7</gson.version>
         <firebase.version>3.0.1</firebase.version>
         <apache.http.version>4.5.2</apache.http.version>
         <google.map.version>0.1.15</google.map.version>
-        <gson.version>2.7</gson.version>
-
-
-        <hibernate.version>5.2.2.Final</hibernate.version>
-        <spring.data.version>1.4.0.RELEASE</spring.data.version>
-
+        <jackson-databind.version>2.5.3</jackson-databind.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
-
     <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>${spring.data.version}</version>
-        </dependency>
+
+        <!--spring-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${springframework.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -75,95 +48,83 @@
             <artifactId>spring-webmvc</artifactId>
             <version>${springframework.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${springdata.version}</version>
+        </dependency>
 
-        <!-- hibernate -->
+        <!--hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.2.2.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.5.6-Final</version>
-        </dependency>
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.2.2.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.1.3.Final</version>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.31</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- logger -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.21</version>
-        </dependency>
-        <!--<dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.21</version>
-            <scope>test</scope>
-        </dependency>-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.21</version>
-        </dependency>
-
-        <!-- jsr303 validation -->
+        <!--jsr303 validation-->
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.1.0.Final</version>
+            <version>${validetion-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
 
-       <!-- &lt;!&ndash; Joda-Time &ndash;&gt;
+        <!--mysql-connector-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
+
+        <!-- Joda-Time -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${joda-time.version}</version>
         </dependency>
 
-        &lt;!&ndash;To bingMap JodaTime with database type&ndash;&gt;
         <dependency>
             <groupId>org.jadira.usertype</groupId>
             <artifactId>usertype.core</artifactId>
-            <version>3.0.0.CR1</version>
-        </dependency>-->
+            <version>${jadira.usertype.version}</version>
+        </dependency>
 
         <!-- Servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <version>${servlet-api.version}</version>
         </dependency>
 
-        <!-- Jackson JSON -->
+        <!--JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
         </dependency>
 
         <!-- firebase -->
@@ -187,13 +148,26 @@
             <version>${google.map.version}</version>
         </dependency>
 
-        <!-- gson converter -->
+        <!--tests-->
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
         </dependency>
 
+        <!-- gson converter -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+
+        <!-- logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
     </dependencies>
 
     <build>

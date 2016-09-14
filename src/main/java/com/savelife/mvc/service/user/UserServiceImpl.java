@@ -7,21 +7,21 @@ import com.savelife.mvc.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by anton on 16.08.16.
  */
-@Service("userService")
+@Service
 public class UserServiceImpl implements UserService {
 
-    @Resource
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UserRoleRepository userRoleRepository;
+
 
     @Override
     public UserEntity findUserByToken(String token) {
@@ -43,11 +43,6 @@ public class UserServiceImpl implements UserService {
     public List<UserEntity> findAllByRole(String role) {
         UserRoleEntity userRole = userRoleRepository.findByUserRole(role);
         List<UserEntity> list = new ArrayList<>();
-//        dao.findAllUsers().forEach((k) -> {
-//            if (k.getUser_role().getUser_role().equals(role)) {
-//                list.add(k);
-//            }
-//        });
         return userRepository.findAllByUserRole(userRole);
     }
 
@@ -83,5 +78,21 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public void setAllUsersUnable() {
+        Iterable<UserEntity> all = userRepository.findAll();
+        for (UserEntity user : all) {
+            userRepository.update(user.getToken(), user.getUserRole().getId(), user.getCurrentLatitude(),
+                    user.getDestinationLongitude(), false, user.getIdUser());
+        }
+    }
 
+    @Override
+    public void setAllUsersEnable() {
+        Iterable<UserEntity> all = userRepository.findAll();
+        for (UserEntity user : all) {
+            userRepository.update(user.getToken(), user.getUserRole().getId(), user.getCurrentLatitude(),
+                    user.getDestinationLongitude(), true, user.getIdUser());
+        }
+    }
 }

@@ -22,7 +22,11 @@ USE `savelife` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `savelife`.`user_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
+<<<<<<< HEAD
   `user_role` VARCHAR(45) NOT NULL,
+=======
+  `userRole` VARCHAR(45) NOT NULL,
+>>>>>>> springData
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -31,6 +35,7 @@ ENGINE = InnoDB;
 -- Table `savelife`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `savelife`.`user` (
+<<<<<<< HEAD
   `id_user` BIGINT(11) NOT NULL,
   `token` VARCHAR(45) NOT NULL,
   `currentLatitude` VARCHAR(45) NOT NULL,
@@ -41,6 +46,20 @@ CREATE TABLE IF NOT EXISTS `savelife`.`user` (
   INDEX `fk_user_user_role_idx` (`user_role_id_user_role` ASC),
   CONSTRAINT `fk_user_user_role`
     FOREIGN KEY (`user_role_id_user_role`)
+=======
+  `idUser` BIGINT(11) NOT NULL,
+  `token` LONGTEXT ,
+  `currentLatitude` DOUBLE ,
+  `currentLongitude` DOUBLE ,
+  `destinationLatitude` DOUBLE ,
+  `destinationLongitude` DOUBLE ,
+  `enable` BOOLEAN,
+  `userRoleID` INT NOT NULL,
+  PRIMARY KEY (`idUser`, `userRoleID`),
+  INDEX `fk_user_user_role_idx` (`userRoleID` ASC),
+  CONSTRAINT `fk_user_user_role`
+    FOREIGN KEY (`userRoleID`)
+>>>>>>> springData
     REFERENCES `savelife`.`user_role` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

@@ -1,10 +1,11 @@
 package com.savelife.mvc.configuration;
 
 import com.google.maps.GeoApiContext;
-import com.savelife.mvc.apis.massaging.configuration.MassagingFireBaseContext;
+import com.savelife.mvc.apis.messaging.configuration.MassagingFireBaseContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.FileNotFoundException;
@@ -34,7 +35,8 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public MassagingFireBaseContext massagingFireBaseContext() {
         MassagingFireBaseContext massagingFireBaseContext = new MassagingFireBaseContext();
-        massagingFireBaseContext.setApiKey("AIzaSyBJ6NYpCY-y3dhVCtnbPaNyBGn2oetce5M");
+//        massagingFireBaseContext.setApiKey("AIzaSyBJ6NYpCY-y3dhVCtnbPaNyBGn2oetce5M");
+        massagingFireBaseContext.setApiKey("AIzaSyD-ydqn5T5XUpshJMYAwHmeRyWB0aIEMAw");
         massagingFireBaseContext.setConnectionUrl("https://fcm.googleapis.com/fcm/send");
         return massagingFireBaseContext;
     }

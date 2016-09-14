@@ -11,7 +11,7 @@ import java.util.List;
  * Created by anton on 18.08.16.
  */
 @Service("detectService")
-public class DetectServiceImpl implements DetectService<Double>{
+public class DetectServiceImpl implements DetectService<Double> {
 
     @Autowired
     private Detection detect;

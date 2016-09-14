@@ -1,6 +1,6 @@
 package com.savelife.mvc.service.sender;
 
-import com.savelife.mvc.apis.massaging.MassageSender;
+import com.savelife.mvc.apis.messaging.MassageSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,7 @@ public class SenderServiceImpl implements SenderService<String> {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<String> send(List<String> body) throws UnsupportedEncodingException {
         return connection.send(body);
     }

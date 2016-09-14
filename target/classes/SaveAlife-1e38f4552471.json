@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "savealife-c83d2",
+  "private_key_id": "1e38f4552471e635ae9d827f45e5409997cc1ef0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCkJlxdgkyMH2Nt\nLMIaUgsnhsINmyCBY9kKI3PMO+Kza4B12okW/A+u+yvT1HbqE8Vva1rR2kDCoDTN\nrgMWRZ6uPcknepMeKkK9icefpWGOKGlDfR4P2REKpM88TZpFJ1CC6qHUkqM3IFIe\n90Iv7szDmDWpxXY9vU0EAbjMjiKRd1ihUyK49i0AL/r/8hIaa6zUzQU2OTnDWKTr\nR9M3nc0xSfdrwUDso4qS0YqIbsN0Wcx1jUF/ourHtibGqiJEO5lf4ATDOzcjOdeF\nmgEKDeRTfZpNj4X4/iZ4KpnhHXlKmWa7aU5ILS/wFPCCpKo2nRHZqbbbpj1Q/r3T\nzn3iJGcnAgMBAAECggEAb0A0f4es25b2aurXzsDmIG7bnB8UA72pPo7Sj4vS1Kk6\nUiW/nd1Nv9kpVhL8WR73Q9FtpyaVl5K+1ttl6jVbG1pyt5gCl4Iq44y6x79tg8xt\nszjcI/+I5j7W2Vb7BH1luqTM82ZCyjzUi3om2JevHa1OSXaz8ZoX1WxZVAHM+erk\nNXwqMKjc5m74zknq2QZvvWdDnm3p9oVYI8ZkrdjL92cIwMXhDNVb2fP481bDU3vl\nIhYJzASlU8W1ZAAAKbyzs9Wu7Ydecpd0+K9YUz4LFb/x7/cIGBahm1FTapPfz4nm\nO9fWmZFEyjnPR7mVmMMqnttzQGsFJCFfBIznAydKIQKBgQDQcuTlcZuaB9BHD56e\nvpELNrBbPds18WDURAs4N2aR5Tndu8kjHixRgBUoqu/qth1QM9iQyGAQhRTCcGQX\nLC6H+/5+3UO7ZWNpN75lB1pl6tPoHH59oBuRw0wQYks4JJleiVHGYF/3/GYAhY/q\nYu/KqmJjISRuepK14AafORNjMQKBgQDJmHjhek8iz0TU8H0sF70YLMnx+eFHGIAt\nUykfPRIHaBpEMGCuEHTDgxd51At/KJ/hUh6UPlnEOUmZuIRYsi5Qu/30v2O3pfFE\nvgbC2QjE/xAR+JP8cGJ7Veu5xAjCGw6KSs4+owOqMzelaqWnpZBiFURr7jRiAlrK\nmYGvBL1p1wKBgQC5zyDw0fNlOz/SiD7ZvH9oYoiT3LCyBgdNT5Y8t02sEYwidkkW\nD8hroeO6i50vOMUqf/y1GphfQXG+3RarfUvBFcTG64971SXnXbRPNF3Faa0ZQ4UR\nkI3iwhbkp+nrEtzP41JMpg4F7SwznNsrkKO1oWnweVOTU5nBm//rIKKCkQKBgQC9\nsPXVnMQICiZHg/8UVUX+EG75fNpIjrpVa9He7hUf2QoWLbtbLmrgaWLWpPsobK58\nU0woy76l0A38Uk5eM1M3bp1ZBhorfT7YI0KzZ4tD6olRj6iYOZvBWCjWBKsFEnaN\nFDSbZcKWDVmIEiDL7hM856wZLuwlaPfLecQ4Tmp4wwKBgGjudyyWshNCAkmXyEkv\ncmqKuCDJnWOaHmsBNoWR+AKmhDXQQ4hNHsGw7BbUlWCFu5O+NfxJ5XKmPeGJYYVD\n3MqwcJ5v12vGIzxwIiWJfsev1YqPK0FqiC7W+VXztgjVJlA50XtGjv842dW7HNXy\nqMJrAPTPF9OO4mfEcNT4FpCB\n-----END PRIVATE KEY-----\n",
+  "client_email": "savealifeaccount@savealife-c83d2.iam.gserviceaccount.com",
+  "client_id": "115340886287089747929",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/savealifeaccount%40savealife-c83d2.iam.gserviceaccount.com"
+}

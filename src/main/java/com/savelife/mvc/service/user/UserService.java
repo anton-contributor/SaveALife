@@ -26,4 +26,8 @@ public interface UserService {
     void delete(UserEntity entity);
 
     void deleteByToken(String token);
+
+    void setAllUsersUnable();
+
+    void setAllUsersEnable();
 }

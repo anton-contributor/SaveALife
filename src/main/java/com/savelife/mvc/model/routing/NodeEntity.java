@@ -3,19 +3,13 @@ package com.savelife.mvc.model.routing;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "node")
+
 public class NodeEntity {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id_route")
     private Long id_node;
 
-    @Column(name = "latitude")
     private double latitude;
 
-    @Column(name = "longitude")
     private double longitude;
 
     public NodeEntity() {

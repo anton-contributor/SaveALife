@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface UserRoleService {
 
-    UserRoleEntity findRoleById(Integer id);
-    UserRoleEntity findRoleByName(String nameRole);
+    UserRoleEntity findRoleById(Integer id_role);
+    UserRoleEntity findRoleByName(String name_role);
     List<UserRoleEntity> findAll();
 }

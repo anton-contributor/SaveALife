@@ -10,10 +10,9 @@ import java.util.Set;
 @Entity
 @Table(name = "user_role", schema = "savelife")
 public class UserRoleEntity {
-
     @Id
     @Column(name = "id")
-    private Integer id;
+    private int id;
 
     @Column(name = "userRole")
     private String userRole;
@@ -21,23 +20,22 @@ public class UserRoleEntity {
     @OneToMany(mappedBy = "userRole")
     private Set<UserEntity> userEntities = new HashSet<UserEntity>();
 
-    public Integer getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id_user_role) {
-        this.id = id_user_role;
+    public void setId(int id) {
+        this.id = id;
     }
 
-
-    public String getUser_role() {
+    public String getUserRole() {
         return userRole;
     }
 
-    public void setUser_role(String user_role) {
-        this.userRole = user_role;
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
-
 
     public Set<UserEntity> getUserEntities() {
         return userEntities;
@@ -46,7 +44,6 @@ public class UserRoleEntity {
     public void setUserEntities(Set<UserEntity> userEntities) {
         this.userEntities = userEntities;
     }
-
 
     @Override
     public String toString() {

@@ -70,8 +70,8 @@ public class UserReceivingRestController {
             public ResponseEntity<Void> call() throws Exception {
                 String role = deviceMessage.getRole();
                 if (Objects.nonNull(role)
-                        && Objects.nonNull(deviceMessage.getCurrentLat())
-                        && Objects.nonNull(deviceMessage.getCurrentLon())) {
+                        /*&& Objects.nonNull(deviceMessage.getCurrentLat())
+                        && Objects.nonNull(deviceMessage.getCurrentLon())*/) {
                     switch (role) {
                         case "ambulance":
                              /*find user by token*/

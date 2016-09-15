@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findOne(idUser);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<UserEntity> findAllUsers() {
         return (List)userRepository.findAll();

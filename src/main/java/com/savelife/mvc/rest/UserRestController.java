@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
@@ -32,6 +33,14 @@ public class UserRestController {
     * */
     @Autowired
     UserRoleService userRoleService;
+
+    @RequestMapping(value = {"/rest/getByTokenNot/{token}"}, method = RequestMethod.GET)
+    public void getByTokenNot(@PathVariable String token) {
+        List<UserEntity> allBeyondCurrent = userService.findAllBeyondCurrent(token);
+        for(UserEntity user : allBeyondCurrent)
+            System.out.println(user.toString());
+    }
+
 
     @RequestMapping(value = {"/rest/get/"}, method = RequestMethod.GET)
     public Callable<ResponseEntity<String>> get(String role) {

@@ -98,6 +98,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserEntity> findAllBeyondCurrent(String token) {
-        return null;
+        return userRepository.findByTokenNot(token);
     }
 }

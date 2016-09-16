@@ -1,6 +1,5 @@
 package com.savelife.mvc.repository;
 
-
 import com.savelife.mvc.model.user.UserRoleEntity;
 import org.springframework.data.repository.CrudRepository;
 

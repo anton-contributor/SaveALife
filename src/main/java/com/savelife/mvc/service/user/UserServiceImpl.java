@@ -22,7 +22,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
-
     @Override
     public UserEntity findUserByToken(String token) {
         return userRepository.findByToken(token);
@@ -33,6 +32,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findOne(idUser);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<UserEntity> findAllUsers() {
         return (List)userRepository.findAll();
@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserEntity> findAllByRole(String role) {
         UserRoleEntity userRole = userRoleRepository.findByUserRole(role);
-        List<UserEntity> list = new ArrayList<>();
         return userRepository.findAllByUserRole(userRole);
     }
 
@@ -85,6 +84,7 @@ public class UserServiceImpl implements UserService {
             userRepository.update(user.getToken(), user.getUserRole().getId(), user.getCurrentLatitude(),
                     user.getDestinationLongitude(), false, user.getIdUser());
         }
+
     }
 
     @Override
@@ -94,5 +94,10 @@ public class UserServiceImpl implements UserService {
             userRepository.update(user.getToken(), user.getUserRole().getId(), user.getCurrentLatitude(),
                     user.getDestinationLongitude(), true, user.getIdUser());
         }
+    }
+
+    @Override
+    public List<UserEntity> findAllBeyondCurrent(String token) {
+        return userRepository.findByTokenNot(token);
     }
 }

@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 
 /*
 * Registration user rest controller
@@ -19,6 +21,7 @@ import java.util.concurrent.Callable;
 @RestController
 public class UserRestController {
 
+    private static Logger logger = Logger.getLogger(UserRestController.class.getName());
     /*
     * CRUD user service
     * */
@@ -30,6 +33,14 @@ public class UserRestController {
     * */
     @Autowired
     UserRoleService userRoleService;
+
+    @RequestMapping(value = {"/rest/getByTokenNot/{token}"}, method = RequestMethod.GET)
+    public void getByTokenNot(@PathVariable String token) {
+        List<UserEntity> allBeyondCurrent = userService.findAllBeyondCurrent(token);
+        for(UserEntity user : allBeyondCurrent)
+            System.out.println(user.toString());
+    }
+
 
     @RequestMapping(value = {"/rest/get/"}, method = RequestMethod.GET)
     public Callable<ResponseEntity<String>> get(String role) {
@@ -47,7 +58,7 @@ public class UserRestController {
     * */
     @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.POST)
     public Callable<ResponseEntity<String>> saveUser(@RequestBody DeviceMessage deviceMessage) {
-        /* logger */
+        logger.info("Received " + deviceMessage);
         System.out.println(deviceMessage.toString());
         return new Callable<ResponseEntity<String>>() {
             @Override
@@ -55,7 +66,7 @@ public class UserRestController {
                 String userToken = deviceMessage.getCurrentToken();
                 String userRole = deviceMessage.getRole();
 
-                if (deviceMessage.getRole() != null & !userService.exist(userToken)) {
+                if (Objects.nonNull(deviceMessage.getRole()) && !userService.exist(userToken)) {
 
                     UserEntity entity = new UserEntity();
 
@@ -64,8 +75,7 @@ public class UserRestController {
                     try {
                         entity.setUserRole(userRoleService.findRoleByName(userRole));
                     } catch (NullPointerException e) {
-                        /*logger */
-                        System.out.println("Incorrect user role: " + userRole);
+                        logger.info("Invalid role " + deviceMessage.getRole());
                         return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
                     }
                     entity.setEnable(true);
@@ -75,10 +85,10 @@ public class UserRestController {
                     entity.setDestinationLongitude(deviceMessage.getDestinationLon());
 
                     userService.save(entity);
+                    logger.info("Saved " + entity);
                     return new ResponseEntity<String>("", HttpStatus.CREATED);
                 } else {
-                    /* logger */
-                    System.out.println("Conflict -----------------------------------------------");
+                    logger.info("Conflict with " + deviceMessage);
                     return new ResponseEntity<String>("", HttpStatus.CONFLICT);
                 }
             }
@@ -90,30 +100,34 @@ public class UserRestController {
     * */
     @RequestMapping(value = {"/rest/user/"}, method = RequestMethod.PUT)
     public Callable<ResponseEntity<UserEntity>> updateUser(@RequestBody DeviceMessage deviceMessage) {
-        /*logger */
-        System.out.println(deviceMessage.toString());
+        logger.info("Received " + deviceMessage);
         return () -> {
             try {
                 /* update only role*/
                 String currentRole = userService.findUserByToken(deviceMessage.getCurrentToken())
                         .getUserRole()
                         .getUserRole();
-                if (currentRole != null & !Objects.equals(currentRole, deviceMessage.getRole())) {
-
+                logger.info("Updating role " + currentRole);
+                if (Objects.nonNull(currentRole) && !Objects.equals(currentRole, deviceMessage.getRole())) {
+                    logger.info("Updating role " + currentRole + " to " + deviceMessage.getRole());
                     UserEntity userEntity = userService.findUserByToken(deviceMessage.getCurrentToken());
                     userEntity.setUserRole(userRoleService.findRoleByName(deviceMessage.getRole()));
                     userService.update(userEntity);
+                    logger.info("Updated " + userEntity);
                 }
+
                 /* update only token */
                 String oldToken = deviceMessage.getOldToken();
+                logger.info("Updating token " + oldToken + " to " + deviceMessage.getCurrentToken());
                 UserEntity userEntity = userService.findUserByToken(oldToken);
 
                 userEntity.setToken(deviceMessage.getCurrentToken());
 
                 userService.update(userEntity);
+                logger.info("Updated " + userEntity);
                 return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);
             } catch (NullPointerException e) {
-                /*logger */
+                logger.info("Exeption " + e);
                 return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
             }
         };

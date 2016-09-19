@@ -1,5 +1,7 @@
 package com.savelife.mvc.model.messaging.device;
 
+import com.savelife.mvc.model.user.UserEntity;
+
 /**
  * Created by anton on 18.08.16.
  */
@@ -173,5 +175,15 @@ public class DeviceMessage {
         sb.append(", enable=").append(enable);
         sb.append('}');
         return sb.toString();
+    }
+
+    public UserEntity setUserFieldsFromDeviceMessage(UserEntity user){
+        user.setCurrentLatitude(currentLat);
+        user.setCurrentLongitude(currentLon);
+        user.setDestinationLatitude(destinationLat);
+        user.setDestinationLongitude(destinationLon);
+        user.setEnable(enable);
+        user.setToken(currentToken);
+        return user;
     }
 }

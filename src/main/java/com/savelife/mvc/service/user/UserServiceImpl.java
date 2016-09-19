@@ -4,17 +4,22 @@ import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.model.user.UserRoleEntity;
 import com.savelife.mvc.repository.UserRepository;
 import com.savelife.mvc.repository.UserRoleRepository;
+import com.savelife.mvc.rest.UserReceivingRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Created by anton on 16.08.16.
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Autowired
     private UserRepository userRepository;
@@ -72,17 +77,35 @@ public class UserServiceImpl implements UserService {
      * */
     @Override
     public void update(UserEntity entity) {
-        userRepository.update(entity.getToken(), entity.getUserRole().getId(),
-                entity.getCurrentLatitude(), entity.getCurrentLongitude(), entity.isEnable(), entity.getIdUser());
+        logger.info("called UserServiceIml.update function");
 
+        UserEntity user = userRepository.findByToken(entity.getToken());
+        if(entity.getToken() != null)
+            user.setToken(entity.getToken());
+        if(!Objects.isNull(entity.isEnable()))
+            user.setEnable(entity.isEnable());
+        if(entity.getCurrentLatitude() != null)
+            user.setCurrentLatitude(entity.getCurrentLatitude());
+        if(entity.getCurrentLongitude() != null)
+            user.setCurrentLongitude(entity.getCurrentLongitude());
+        if(entity.getDestinationLatitude() != null)
+            user.setDestinationLatitude(entity.getDestinationLatitude());
+        if(entity.getDestinationLongitude() != null)
+            user.setDestinationLongitude(entity.getDestinationLongitude());
+        if(!Objects.isNull(entity.getIdUser()))
+            user.setIdUser(entity.getIdUser());
+        userRepository.save(user);
+//        userRepository.update(entity.getToken(), entity.getUserRole().getId(),
+//                entity.getCurrentLatitude(), entity.getCurrentLongitude(), entity.isEnable(), entity.getIdUser());
+        logger.info("finished UserServiceIml.update function");
     }
 
     @Override
     public void setAllUsersUnable() {
         Iterable<UserEntity> all = userRepository.findAll();
         for (UserEntity user : all) {
-            userRepository.update(user.getToken(), user.getUserRole().getId(), user.getCurrentLatitude(),
-                    user.getDestinationLongitude(), false, user.getIdUser());
+            user.setEnable(false);
+            save(user);
         }
 
     }
@@ -91,8 +114,8 @@ public class UserServiceImpl implements UserService {
     public void setAllUsersEnable() {
         Iterable<UserEntity> all = userRepository.findAll();
         for (UserEntity user : all) {
-            userRepository.update(user.getToken(), user.getUserRole().getId(), user.getCurrentLatitude(),
-                    user.getDestinationLongitude(), true, user.getIdUser());
+            user.setEnable(true);
+            save(user);
         }
     }
 

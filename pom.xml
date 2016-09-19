@@ -5,10 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>savelife.net</groupId>
-    <artifactId>savelife</artifactId>
+    <artifactId>SaveALife</artifactId>
     <packaging>war</packaging>
     <version>1.0</version>
     <name>Save a life pom</name>
+
 
     <properties>
         <springframework.version>4.3.2.RELEASE</springframework.version>
@@ -28,6 +29,7 @@
         <jackson-databind.version>2.5.3</jackson-databind.version>
         <junit.version>4.12</junit.version>
     </properties>
+
     <dependencies>
 
         <!--spring-->
@@ -99,6 +101,7 @@
             <artifactId>joda-time</artifactId>
             <version>${joda-time.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.jadira.usertype</groupId>
             <artifactId>usertype.core</artifactId>
@@ -151,6 +154,8 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
+
+        <!-- gson converter -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>

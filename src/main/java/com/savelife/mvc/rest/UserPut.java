@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * user rest controller receiving put requests
  */
 @RestController
-@RequestMapping(value = {"/rest/user/"})
+@RequestMapping(value = {"/rest/user"})
 public class UserPut {
 
     private static Logger logger = Logger.getLogger(UserPut.class.getName());
@@ -68,7 +68,7 @@ public class UserPut {
                 logger.info("Updated " + userEntity);
                 return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);
             } catch (NullPointerException e) {
-                logger.info("Exeption " + e);
+                logger.info("Exception " + e);
                 return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
             }
         };

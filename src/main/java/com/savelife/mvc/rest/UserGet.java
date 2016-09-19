@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * user rest controller to receiving get requests
  */
 @RestController
-@RequestMapping(value = {"/rest/user/"})
+@RequestMapping(value = {"/rest/user"})
 public class UserGet {
 
     private static Logger logger = Logger.getLogger(UserGet.class.getName());

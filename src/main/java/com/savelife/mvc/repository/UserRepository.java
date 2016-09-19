@@ -2,8 +2,6 @@ package com.savelife.mvc.repository;
 
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.model.user.UserRoleEntity;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 

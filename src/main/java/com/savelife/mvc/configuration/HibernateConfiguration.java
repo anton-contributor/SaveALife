@@ -1,40 +1,55 @@
 package com.savelife.mvc.configuration;
-
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
+import org.springframework.orm.jpa.JpaDialect;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
+import javax.servlet.http.HttpServlet;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-/**
- * Created by anton on 27.07.16.
- */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({"com.savelife.mvc.configuration"})
-@PropertySource(value = {"classpath:application.properties"})
+@ComponentScan({ "com.savelife.mvc.configuration" })
+@EnableJpaRepositories("com.savelife.mvc.repository")
+@PropertySource(value = { "classpath:application.properties" })
 public class HibernateConfiguration {
 
     @Autowired
     private Environment environment;
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[]{"com.savelife.mvc.model"});
-        sessionFactory.setHibernateProperties(hibernateProperties());
-        return sessionFactory;
+    public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(true);
+        vendorAdapter.setShowSql(false);
+        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQL5InnoDBDialect");
+        vendorAdapter.setDatabase(Database.MYSQL);
+
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setPackagesToScan("com.savelife.mvc.model");
+        factory.setDataSource(dataSource);
+
+        factory.setJpaProperties(hibernateProperties());
+        factory.afterPropertiesSet();
+
+        return factory.getObject();
     }
+
 
     @Bean
     public DataSource dataSource() {
@@ -56,9 +71,16 @@ public class HibernateConfiguration {
 
     @Bean
     @Autowired
-    public HibernateTransactionManager transactionManager(SessionFactory s) {
-        HibernateTransactionManager txManager = new HibernateTransactionManager();
-        txManager.setSessionFactory(s);
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager txManager = new JpaTransactionManager();
+        JpaDialect jpaDialect = new HibernateJpaDialect();
+        txManager.setEntityManagerFactory(entityManagerFactory);
+        txManager.setJpaDialect(jpaDialect);
         return txManager;
+    }
+    
+    @Bean
+    public HibernateExceptionTranslator hibernateExceptionTranslator() {
+        return new HibernateExceptionTranslator();
     }
 }

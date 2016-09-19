@@ -3,7 +3,7 @@ package com.savelife.mvc.model.messaging.server;
 /**
  * @Massage POJO massage for sanding token cloud massaging service
  */
-public class ServerMassage {
+public class ServerMessage {
 
     /*
     * device token
@@ -15,7 +15,7 @@ public class ServerMassage {
     * */
     private Data data;
 
-    public ServerMassage() {
+    public ServerMessage() {
 
     }
 
@@ -40,10 +40,10 @@ public class ServerMassage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ServerMassage serverMassage = (ServerMassage) o;
+        ServerMessage serverMessage = (ServerMessage) o;
 
-        if (to != null ? !to.equals(serverMassage.to) : serverMassage.to != null) return false;
-        return data != null ? data.equals(serverMassage.data) : serverMassage.data == null;
+        if (to != null ? !to.equals(serverMessage.to) : serverMessage.to != null) return false;
+        return data != null ? data.equals(serverMessage.data) : serverMessage.data == null;
 
     }
 
@@ -56,7 +56,7 @@ public class ServerMassage {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ServerMassage{");
+        final StringBuilder sb = new StringBuilder("ServerMessage{");
         sb.append("to='").append(to).append('\'');
         sb.append(", data=").append(data);
         sb.append('}');

@@ -5,15 +5,15 @@ import com.savelife.mvc.model.routing.NodeEntity;
 import java.util.List;
 
 /**
- * Nested object data of the @ServerMassage
- * consisting of the different options to be sent as a massageBody body
+ * Nested object data of the @ServerMessage
+ * consisting of the different options to be sent as a messageBody body
  */
 public class Data {
 
     /*
-    * nested option displaying a massageBody body
+    * nested option displaying a messageBody body
     * */
-    private String massageBody;
+    private String messageBody;
 
     private List<NodeEntity> path;
 
@@ -39,12 +39,12 @@ public class Data {
         this.longitude = longitude;
     }
 
-    public String getMassageBody() {
-        return massageBody;
+    public String getMessageBody() {
+        return messageBody;
     }
 
-    public void setMassageBody(String massageBody) {
-        this.massageBody = massageBody;
+    public void setMessageBody(String messageBody) {
+        this.messageBody = messageBody;
     }
 
     public List<NodeEntity> getPath() {
@@ -64,7 +64,7 @@ public class Data {
 
         if (Double.compare(data.latitude, latitude) != 0) return false;
         if (Double.compare(data.longitude, longitude) != 0) return false;
-        if (massageBody != null ? !massageBody.equals(data.massageBody) : data.massageBody != null) return false;
+        if (messageBody != null ? !messageBody.equals(data.messageBody) : data.messageBody != null) return false;
         return path != null ? path.equals(data.path) : data.path == null;
 
     }
@@ -73,7 +73,7 @@ public class Data {
     public int hashCode() {
         int result;
         long temp;
-        result = massageBody != null ? massageBody.hashCode() : 0;
+        result = messageBody != null ? messageBody.hashCode() : 0;
         result = 31 * result + (path != null ? path.hashCode() : 0);
         temp = Double.doubleToLongBits(latitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -85,7 +85,7 @@ public class Data {
     @Override
     public String toString() {
         return "Data{" +
-                "massageBody='" + massageBody + '\'' +
+                "messageBody='" + messageBody + '\'' +
                 ", path=" + path +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +

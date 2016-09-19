@@ -22,7 +22,7 @@ USE `savelife` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `savelife`.`user_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `user_role` VARCHAR(45) NOT NULL,
+  `userRole` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -31,16 +31,18 @@ ENGINE = InnoDB;
 -- Table `savelife`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `savelife`.`user` (
-  `id_user` BIGINT(11) NOT NULL,
-  `token` VARCHAR(45) NOT NULL,
-  `currentLatitude` VARCHAR(45) NOT NULL,
-  `currentLongitude` VARCHAR(45) NOT NULL,
+  `idUser` BIGINT(11) NOT NULL,
+  `token` LONGTEXT ,
+  `currentLatitude` DOUBLE ,
+  `currentLongitude` DOUBLE ,
+  `destinationLatitude` DOUBLE ,
+  `destinationLongitude` DOUBLE ,
   `enable` BOOLEAN,
-  `user_role_id_user_role` INT NOT NULL,
-  PRIMARY KEY (`id_user`, `user_role_id_user_role`),
-  INDEX `fk_user_user_role_idx` (`user_role_id_user_role` ASC),
+  `userRoleID` INT NOT NULL,
+  PRIMARY KEY (`idUser`, `userRoleID`),
+  INDEX `fk_user_user_role_idx` (`userRoleID` ASC),
   CONSTRAINT `fk_user_user_role`
-    FOREIGN KEY (`user_role_id_user_role`)
+    FOREIGN KEY (`userRoleID`)
     REFERENCES `savelife`.`user_role` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

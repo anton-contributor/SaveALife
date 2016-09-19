@@ -1,9 +1,11 @@
 package com.savelife.mvc.model.messaging.device;
 
+import com.savelife.mvc.model.user.UserEntity;
+
 /**
  * Created by anton on 18.08.16.
  */
-public class DeviceMassage {
+public class DeviceMessage {
     /*
     * current token
     * */
@@ -49,7 +51,7 @@ public class DeviceMassage {
     * */
     private boolean enable;
 
-    public DeviceMassage() {
+    public DeviceMessage() {
     }
 
     public String getCurrentToken() {
@@ -129,7 +131,7 @@ public class DeviceMassage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DeviceMassage that = (DeviceMassage) o;
+        DeviceMessage that = (DeviceMessage) o;
 
         if (enable != that.enable) return false;
         if (currentToken != null ? !currentToken.equals(that.currentToken) : that.currentToken != null) return false;
@@ -161,7 +163,7 @@ public class DeviceMassage {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("DeviceMassage{");
+        final StringBuilder sb = new StringBuilder("DeviceMessage{");
         sb.append("currentToken='").append(currentToken).append('\'');
         sb.append(", oldToken='").append(oldToken).append('\'');
         sb.append(", currentLat=").append(currentLat);
@@ -173,5 +175,15 @@ public class DeviceMassage {
         sb.append(", enable=").append(enable);
         sb.append('}');
         return sb.toString();
+    }
+
+    public UserEntity setUserFieldsFromDeviceMessage(UserEntity user){
+        user.setCurrentLatitude(currentLat);
+        user.setCurrentLongitude(currentLon);
+        user.setDestinationLatitude(destinationLat);
+        user.setDestinationLongitude(destinationLon);
+        user.setEnable(enable);
+        user.setToken(currentToken);
+        return user;
     }
 }

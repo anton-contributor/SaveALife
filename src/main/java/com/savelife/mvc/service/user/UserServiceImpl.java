@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     public void update(UserEntity entity) {
         logger.info("called UserServiceIml.update function");
 
-        UserEntity user = userRepository.findByToken(entity.getToken());
+      /*  UserEntity user = userRepository.findByToken(entity.getToken());
         if(entity.getToken() != null)
             user.setToken(entity.getToken());
         if(!Objects.isNull(entity.isEnable()))
@@ -92,9 +92,9 @@ public class UserServiceImpl implements UserService {
             user.setDestinationLongitude(entity.getDestinationLongitude());
         if(!Objects.isNull(entity.getIdUser()))
             user.setIdUser(entity.getIdUser());
-        userRepository.save(user);
-//        userRepository.update(entity.getToken(), entity.getUserRole().getId(),
-//                entity.getCurrentLatitude(), entity.getCurrentLongitude(), entity.isEnable(), entity.getIdUser());
+        userRepository.save(user);*/
+        userRepository.update(entity.getToken(), entity.getUserRole().getId(),
+                entity.getCurrentLatitude(), entity.getCurrentLongitude(), entity.isEnable(), entity.getIdUser());
         logger.info("finished UserServiceIml.update function");
     }
 

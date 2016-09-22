@@ -62,7 +62,7 @@ public class UserPost {
     UserRoleService userRoleService;
 
     /*
-    * send path to drivers wich depends on ambulance position
+    * send path to drivers depends on ambulance position
     * */
     @PostMapping(params = {"role=ambulance"})
     public Callable<ResponseEntity<Void>> postAmbulance(@RequestBody DeviceMessage deviceMessage) {
@@ -138,9 +138,10 @@ public class UserPost {
                     userService.save(newUser);
                     return new ResponseEntity<Void>(HttpStatus.CREATED);
                 } else {
+                    /*update */
                     UserEntity userEntity = userService.findUserByToken(currentToken);
                     logger.info("Updating user " + userEntity);
-                    userService.save(userEntity);
+                    userService.update(userEntity);
                     logger.info("Updated user " + userEntity);
                     return new ResponseEntity<Void>(HttpStatus.OK);
                 }
@@ -157,14 +158,13 @@ public class UserPost {
                 logger.info("Inside of the person ");
                 if (Objects.nonNull(deviceMessage.getCurrentToken()) && userService.exist(deviceMessage.getCurrentToken())) {
                     /* update person*/
-
                     UserEntity person = userService.findUserByToken(deviceMessage.getCurrentToken());
                     logger.info("Updating user " + person);
                     person = deviceMessage.setUserFieldsFromDeviceMessage(person);
-                    userService.save(person);
+                    userService.update(person);
                     logger.info("Updated " + person);
                 } else {
-                     /*save driver*/
+                    /*save driver*/
                     UserEntity newUser = new UserEntity();
                     newUser = deviceMessage.setUserFieldsFromDeviceMessage(newUser);
                     newUser.setUserRole(userRoleService.findRoleByName("person"));

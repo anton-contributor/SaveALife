@@ -7,11 +7,10 @@ import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServlet;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
@@ -37,11 +36,11 @@ public class UserPut {
     @Autowired
     UserRoleService userRoleService;
 
-    /*
-    * update user
+    /**
+     * update user role
     * */
     @PutMapping()
-    public Callable<ResponseEntity<UserEntity>> updateUser(@RequestBody DeviceMessage deviceMessage) {
+    public Callable<ResponseEntity<String>> updateUserRole(@RequestParam("role") String role, @RequestBody DeviceMessage deviceMessage) {
         logger.info("Received " + deviceMessage);
         return () -> {
             try {
@@ -50,27 +49,47 @@ public class UserPut {
                         .getUserRole()
                         .getUserRole();
                 logger.info("Updating role " + currentRole);
-                if (Objects.nonNull(currentRole) && !Objects.equals(currentRole, deviceMessage.getRole())) {
-                    logger.info("Updating role " + currentRole + " to " + deviceMessage.getRole());
+                if (Objects.nonNull(currentRole) && !Objects.equals(currentRole, role)) {
+                    logger.info("Updating role " + currentRole + " to " + role);
                     UserEntity userEntity = userService.findUserByToken(deviceMessage.getCurrentToken());
-                    userEntity.setUserRole(userRoleService.findRoleByName(deviceMessage.getRole()));
+                    userEntity.setUserRole(userRoleService.findRoleByName(role));
                     userService.update(userEntity);
                     logger.info("Updated " + userEntity);
                 }
-                /* update only token */
-                String oldToken = deviceMessage.getOldToken();
-                logger.info("Updating token " + oldToken + " to " + deviceMessage.getCurrentToken());
-                UserEntity userEntity = userService.findUserByToken(oldToken);
-
-                userEntity.setToken(deviceMessage.getCurrentToken());
-
-                userService.update(userEntity);
-                logger.info("Updated " + userEntity);
-                return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);
+                return new ResponseEntity<String>(HttpStatus.OK);
             } catch (NullPointerException e) {
                 logger.info("Exception " + e);
-                return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
             }
         };
     }
+
+   /* *//**
+     * update user token
+     *//*
+    @PutMapping()
+    public Callable<ResponseEntity<String>> updateUserToken(@RequestParam("role") String role,@RequestBody DeviceMessage deviceMessage) {
+        logger.info("Received " + deviceMessage);
+        return () -> {
+            try {
+                if (Objects.nonNull(deviceMessage.getOldToken())) {
+                    *//*update only token*//*
+                    String oldToken = deviceMessage.getOldToken();
+                    logger.info("Updating token " + oldToken + " to " + deviceMessage.getCurrentToken());
+                    UserEntity userEntity = userService.findUserByToken(oldToken);
+
+                    userEntity.setToken(deviceMessage.getCurrentToken());
+
+                    userService.update(userEntity);
+                } else {
+                    logger.info("Received token is null");
+                    return new ResponseEntity<String>(HttpStatus.CONFLICT);
+                }
+                return new ResponseEntity<String>(HttpStatus.OK);
+            } catch (Exception e) {
+                logger.info("Exception " + e);
+                return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            }
+        };
+    }*/
 }

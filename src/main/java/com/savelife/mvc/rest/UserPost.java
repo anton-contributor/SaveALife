@@ -130,18 +130,20 @@ public class UserPost {
                 String currentToken = deviceMessage.getCurrentToken();
 
                 if (Objects.nonNull(currentToken) && !userService.exist(currentToken)) {
-                 /* save driver */
+                    /* save driver */
                     UserEntity newUser = new UserEntity();
                     newUser = deviceMessage.setUserFieldsFromDeviceMessage(newUser);
                     newUser.setUserRole(userRoleService.findRoleByName("driver"));
                     logger.info("Saving user " + newUser);
                     userService.save(newUser);
+                    logger.info("Saved user " + newUser);
                     return new ResponseEntity<Void>(HttpStatus.CREATED);
                 } else {
                     /*update */
                     UserEntity userEntity = userService.findUserByToken(currentToken);
+                    userEntity = deviceMessage.setUserFieldsFromDeviceMessage(userEntity);
                     logger.info("Updating user " + userEntity);
-                    userService.update(userEntity);
+                    userService.save(userEntity);
                     logger.info("Updated user " + userEntity);
                     return new ResponseEntity<Void>(HttpStatus.OK);
                 }
@@ -161,7 +163,7 @@ public class UserPost {
                     UserEntity person = userService.findUserByToken(deviceMessage.getCurrentToken());
                     logger.info("Updating user " + person);
                     person = deviceMessage.setUserFieldsFromDeviceMessage(person);
-                    userService.update(person);
+                    userService.save(person);
                     logger.info("Updated " + person);
                 } else {
                     /*save driver*/
@@ -171,41 +173,44 @@ public class UserPost {
                     userService.save(newUser);
                     logger.info("Saved user " + newUser);
                 }
-                double radius = 1000.0;//radius of the distance to notify the devices
+                if (Objects.nonNull(deviceMessage.getMessage())) {
 
-                Converter<List<UserEntity>, List<String>> converter = (entities) -> {
-                    List<String> converted = new ArrayList<>();
+                    double radius = 1000.0;//radius of the distance to notify the devices
 
-                    entities.forEach((k) -> {
-                        ServerMessage m = new ServerMessage();
-                        m.setTo(k.getToken());
-                        Data d = new Data();
-                        System.out.println(deviceMessage.getMessage());
-                        d.setMessageBody("Need a help due to the " + deviceMessage.getMessage());
-                        d.setLatitude(deviceMessage.getCurrentLat());
-                        d.setLongitude(deviceMessage.getCurrentLon());
+                    Converter<List<UserEntity>, List<String>> converter = (entities) -> {
+                        List<String> converted = new ArrayList<>();
 
-                        m.setData(d);
-                        logger.info("Converting and adding " + m + " to json");
+                        entities.forEach((k) -> {
+                            ServerMessage m = new ServerMessage();
+                            m.setTo(k.getToken());
+                            Data d = new Data();
+                            System.out.println(deviceMessage.getMessage());
+                            d.setMessageBody("Need a help due to the " + deviceMessage.getMessage());
+                            d.setLatitude(deviceMessage.getCurrentLat());
+                            d.setLongitude(deviceMessage.getCurrentLon());
+
+                            m.setData(d);
+                            logger.info("Converting and adding " + m + " to json");
                         /* convert into JSON format*/
-                        Gson gson = new Gson();
-                        converted.add(gson.toJson(m));
-                        logger.info("Converted and ended " + gson.toJson(m));
-                    });
-                    return converted;
-                };
-                logger.info("Sending massages to everyone ");
+                            Gson gson = new Gson();
+                            converted.add(gson.toJson(m));
+                            logger.info("Converted and ended " + gson.toJson(m));
+                        });
+                        return converted;
+                    };
                 /* send messages to everyone */
-                if (Objects.nonNull(deviceMessage.getCurrentLat()) && Objects.nonNull(deviceMessage.getCurrentLon())) {
-                    senderService.send(
-                            converter.convert(
-                                    detectionService.detect(
-                                            radius,
-                                            deviceMessage.getCurrentLat(),
-                                            deviceMessage.getCurrentLon(),
-                                            userService.findAllUsers())));// everyone
-                } else {
-                    logger.info("massages wasn't sent to everyone, currentLat and/or currentLon not found");
+                    if (Objects.nonNull(deviceMessage.getCurrentLat()) && Objects.nonNull(deviceMessage.getCurrentLon())) {
+                        logger.info("Sending massages to everyone ");
+                        senderService.send(
+                                converter.convert(
+                                        detectionService.detect(
+                                                radius,
+                                                deviceMessage.getCurrentLat(),
+                                                deviceMessage.getCurrentLon(),
+                                                userService.findAllBeyondCurrent(deviceMessage.getCurrentToken()))));// everyone
+                    } else {
+                        logger.info("massages weren't sent to everyone, currentLat and/or currentLon not found");
+                    }
                 }
                 logger.info("postPerson method successfully finished");
                 return new ResponseEntity<Void>(HttpStatus.OK);

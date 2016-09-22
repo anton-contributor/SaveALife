@@ -38,22 +38,31 @@ public class UserPut {
 
     /**
      * update user role
-    * */
+     */
     @PutMapping()
-    public Callable<ResponseEntity<String>> updateUserRole(@RequestParam("role") String role, @RequestBody DeviceMessage deviceMessage) {
+    public Callable<ResponseEntity<String>> updateUserRole(@RequestBody DeviceMessage deviceMessage) {
         logger.info("Received " + deviceMessage);
         return () -> {
             try {
                 /* update only role*/
-                String currentRole = userService.findUserByToken(deviceMessage.getCurrentToken())
-                        .getUserRole()
-                        .getUserRole();
-                logger.info("Updating role " + currentRole);
-                if (Objects.nonNull(currentRole) && !Objects.equals(currentRole, role)) {
-                    logger.info("Updating role " + currentRole + " to " + role);
+                UserEntity currentUser = userService
+                        .findUserByToken(deviceMessage.getCurrentToken());
+                logger.info("Updating" + currentUser);
+                if (Objects.nonNull(deviceMessage.getRole()) && !Objects.equals(currentUser.getUserRole().getUserRole(), deviceMessage.getRole())) {
+                    logger.info("Updating role " + currentUser.getUserRole().getUserRole() + " to " + deviceMessage.getRole());
                     UserEntity userEntity = userService.findUserByToken(deviceMessage.getCurrentToken());
-                    userEntity.setUserRole(userRoleService.findRoleByName(role));
+                    userEntity.setUserRole(userRoleService.findRoleByName(deviceMessage.getRole()));
                     userService.update(userEntity);
+                    logger.info("Updated " + userEntity);
+                }
+                if (Objects.nonNull(deviceMessage.getOldToken())) {
+                    /*update only token*/
+                    logger.info("Updating token " + deviceMessage.getOldToken() + " to " + deviceMessage.getCurrentToken());
+                    UserEntity userEntity = userService.findUserByToken(deviceMessage.getOldToken());
+
+                    userEntity.setToken(deviceMessage.getCurrentToken());
+
+                    userService.save(userEntity);
                     logger.info("Updated " + userEntity);
                 }
                 return new ResponseEntity<String>(HttpStatus.OK);
@@ -67,18 +76,17 @@ public class UserPut {
    /* *//**
      * update user token
      *//*
-    @PutMapping()
-    public Callable<ResponseEntity<String>> updateUserToken(@RequestParam("role") String role,@RequestBody DeviceMessage deviceMessage) {
-        logger.info("Received " + deviceMessage);
+    @PutMapping(params = {})
+    public Callable<ResponseEntity<String>> updateUserToken(@RequestParam("currentToken") String currentToken, @RequestParam("currentToken") String oldToken) {
+        logger.info("Received tokens: " + currentToken + ", " + oldToken);
         return () -> {
             try {
-                if (Objects.nonNull(deviceMessage.getOldToken())) {
+                if (Objects.nonNull(oldToken)) {
                     *//*update only token*//*
-                    String oldToken = deviceMessage.getOldToken();
-                    logger.info("Updating token " + oldToken + " to " + deviceMessage.getCurrentToken());
+                    logger.info("Updating token " + oldToken + " to " + currentToken);
                     UserEntity userEntity = userService.findUserByToken(oldToken);
 
-                    userEntity.setToken(deviceMessage.getCurrentToken());
+                    userEntity.setToken(currentToken);
 
                     userService.update(userEntity);
                 } else {

@@ -178,12 +178,12 @@ public class DeviceMessage {
     }
 
     public UserEntity setUserFieldsFromDeviceMessage(UserEntity user){
-        user.setCurrentLatitude(currentLat);
-        user.setCurrentLongitude(currentLon);
-        user.setDestinationLatitude(destinationLat);
-        user.setDestinationLongitude(destinationLon);
-        user.setEnable(enable);
-        user.setToken(currentToken);
+        user.setCurrentLatitude(this.currentLat);
+        user.setCurrentLongitude(this.currentLon);
+        user.setDestinationLatitude(this.destinationLat);
+        user.setDestinationLongitude(this.destinationLon);
+        user.setEnable(this.enable);
+        user.setToken(this.currentToken);
         return user;
     }
 }

@@ -7,9 +7,12 @@ import com.savelife.mvc.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by anton on 16.08.16.
@@ -38,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @SuppressWarnings("unchecked")
     @Override
     public List<UserEntity> findAllUsers() {
-        return (List)userRepository.findAll();
+        return (List) userRepository.findAll();
     }
 
     @SuppressWarnings("unchecked")
@@ -50,7 +53,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean exist(String token) {
-        return userRepository.findByToken(token) != null;
+        logger.info("Inside of the exist method");
+        return Objects.nonNull(userRepository.findByToken(token));
     }
 
     @Override
@@ -105,7 +109,6 @@ public class UserServiceImpl implements UserService {
             user.setEnable(false);
             save(user);
         }
-
     }
 
     @Override
@@ -119,6 +122,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserEntity> findAllBeyondCurrent(String token) {
-        return userRepository.findByTokenNot(token);
+       /* List<UserEntity> list = userRepository.findByTokenNot(token);
+        list.forEach(v -> logger.info(v.toString()));*/
+        List<UserEntity> listResult = new ArrayList<>();
+        List<UserEntity> list = (List) userRepository.findAll();
+        for (UserEntity e : list) {
+            if (!Objects.equals(e.getToken(), token)) {
+                listResult.add(e);
+            }
+        }
+        listResult.forEach(v -> System.out.println(v));
+
+        return listResult;
+       /* return userRepository.findByTokenNot(token);*/
     }
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -63,6 +64,7 @@ public class UserPost {
 
     /*
     * send path to drivers depends on ambulance position
+    * TODO: in each sending of the ambulance coords, rebuilt a path for already sent driver
     * */
     @PostMapping(params = {"role=ambulance"})
     public Callable<ResponseEntity<Void>> postAmbulance(@RequestBody DeviceMessage deviceMessage) {
@@ -72,8 +74,8 @@ public class UserPost {
             public ResponseEntity<Void> call() throws Exception {
                  /*find user by token*/
                 try {
-                /* check the ambulance status(in race or complete)*/
-                    if (!deviceMessage.isEnable() && deviceMessage.isEnable()) {
+                    /* check the ambulance status(in race or complete)*/
+                    if (!deviceMessage.isEnable()) {
                         logger.info("Make all users unable");
                         userService.setAllUsersUnable();
                         return new ResponseEntity<Void>(HttpStatus.OK);
@@ -131,6 +133,7 @@ public class UserPost {
 
                 if (Objects.nonNull(currentToken) && !userService.exist(currentToken)) {
                     /* save driver */
+                    logger.info("Inside of the saving ");
                     UserEntity newUser = new UserEntity();
                     newUser = deviceMessage.setUserFieldsFromDeviceMessage(newUser);
                     newUser.setUserRole(userRoleService.findRoleByName("driver"));
@@ -138,8 +141,9 @@ public class UserPost {
                     userService.save(newUser);
                     logger.info("Saved user " + newUser);
                     return new ResponseEntity<Void>(HttpStatus.CREATED);
-                } else {
+                } else if (Objects.nonNull(currentToken) && userService.exist(currentToken)){
                     /*update */
+                    logger.info("Inside of the updating ");
                     UserEntity userEntity = userService.findUserByToken(currentToken);
                     userEntity = deviceMessage.setUserFieldsFromDeviceMessage(userEntity);
                     logger.info("Updating user " + userEntity);
@@ -147,6 +151,7 @@ public class UserPost {
                     logger.info("Updated user " + userEntity);
                     return new ResponseEntity<Void>(HttpStatus.OK);
                 }
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
         };
     }
@@ -158,15 +163,21 @@ public class UserPost {
             @Override
             public ResponseEntity<Void> call() throws Exception {
                 logger.info("Inside of the person ");
-                if (Objects.nonNull(deviceMessage.getCurrentToken()) && userService.exist(deviceMessage.getCurrentToken())) {
+                if (userService.exist(deviceMessage.getCurrentToken()) && Objects.nonNull(deviceMessage.getCurrentToken())) {
                     /* update person*/
+                    logger.info("Updating " + deviceMessage.getRole());
+
                     UserEntity person = userService.findUserByToken(deviceMessage.getCurrentToken());
+
                     logger.info("Updating user " + person);
+
                     person = deviceMessage.setUserFieldsFromDeviceMessage(person);
                     userService.save(person);
+
                     logger.info("Updated " + person);
-                } else {
+                } else if (!userService.exist(deviceMessage.getCurrentToken())) {
                     /*save driver*/
+                    logger.info("Saving person" + deviceMessage.getRole());
                     UserEntity newUser = new UserEntity();
                     newUser = deviceMessage.setUserFieldsFromDeviceMessage(newUser);
                     newUser.setUserRole(userRoleService.findRoleByName("person"));
@@ -175,30 +186,34 @@ public class UserPost {
                 }
                 if (Objects.nonNull(deviceMessage.getMessage())) {
 
+                    logger.info("Sending message " + deviceMessage.getMessage());
                     double radius = 1000.0;//radius of the distance to notify the devices
 
                     Converter<List<UserEntity>, List<String>> converter = (entities) -> {
+                        logger.info("Inside of the converter ");
                         List<String> converted = new ArrayList<>();
 
                         entities.forEach((k) -> {
                             ServerMessage m = new ServerMessage();
+                            logger.info("Send to " + k.getToken());
                             m.setTo(k.getToken());
                             Data d = new Data();
-                            System.out.println(deviceMessage.getMessage());
+                            logger.info("Adding message " + deviceMessage.getMessage());
                             d.setMessageBody("Need a help due to the " + deviceMessage.getMessage());
                             d.setLatitude(deviceMessage.getCurrentLat());
                             d.setLongitude(deviceMessage.getCurrentLon());
 
                             m.setData(d);
+                            logger.info("Added data body to message" + d);
                             logger.info("Converting and adding " + m + " to json");
-                        /* convert into JSON format*/
+                            /* convert into JSON format*/
                             Gson gson = new Gson();
                             converted.add(gson.toJson(m));
                             logger.info("Converted and ended " + gson.toJson(m));
                         });
                         return converted;
                     };
-                /* send messages to everyone */
+                    /* send messages to everyone */
                     if (Objects.nonNull(deviceMessage.getCurrentLat()) && Objects.nonNull(deviceMessage.getCurrentLon())) {
                         logger.info("Sending massages to everyone ");
                         senderService.send(
@@ -208,6 +223,7 @@ public class UserPost {
                                                 deviceMessage.getCurrentLat(),
                                                 deviceMessage.getCurrentLon(),
                                                 userService.findAllBeyondCurrent(deviceMessage.getCurrentToken()))));// everyone
+                        logger.info("Sending to everyone completed");
                     } else {
                         logger.info("massages weren't sent to everyone, currentLat and/or currentLon not found");
                     }

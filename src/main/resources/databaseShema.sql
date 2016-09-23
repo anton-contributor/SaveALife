@@ -21,7 +21,7 @@ USE `savelife` ;
 -- Table `savelife`.`user_role`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `savelife`.`user_role` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL  ,
   `userRole` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -31,7 +31,7 @@ ENGINE = InnoDB;
 -- Table `savelife`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `savelife`.`user` (
-  `idUser` BIGINT(11) NOT NULL,
+  `idUser` BIGINT(11) NOT NULL AUTO_INCREMENT,
   `token` LONGTEXT ,
   `currentLatitude` DOUBLE ,
   `currentLongitude` DOUBLE ,

@@ -33,4 +33,6 @@ public interface UserService {
     void setAllUsersEnable();
 
     List<UserEntity> findAllBeyondCurrent(String token);
+
+    List<UserEntity> findAllUnableDrivers();
 }

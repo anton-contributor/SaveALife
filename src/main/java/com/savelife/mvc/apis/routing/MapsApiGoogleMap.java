@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -33,18 +34,21 @@ public class MapsApiGoogleMap implements MapsApi {
 
     @Override
     public List<NodeEntity> getRoute(Double startLat, Double startLng, Double endLat, Double endLng) {
-        DirectionsResult result = null;
-        LatLng origin = new LatLng(startLat, startLng);
-        LatLng destination = new LatLng(endLat, endLng);
-        try {
-            result = DirectionsApi.newRequest(geoApiContext).mode(TravelMode.DRIVING)
-                    .origin(origin)
-                    .destination(destination).await();
+        if (Objects.nonNull(startLat)
+                && Objects.nonNull(startLng)
+                && Objects.nonNull(endLat)
+                && Objects.nonNull(endLng)) {
+            try {
+                DirectionsResult result = DirectionsApi.newRequest(geoApiContext).mode(TravelMode.DRIVING)
+                        .origin(new LatLng(startLat, startLng))
+                        .destination(new LatLng(endLat, endLng)).await();
 
-            return parseResult(result);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                return parseResult(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
             return null;
         }
     }

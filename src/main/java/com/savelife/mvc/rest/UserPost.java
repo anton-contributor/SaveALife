@@ -83,20 +83,24 @@ public class UserPost {
                      /*radius of the detection*/
                     double radius = 100;
                     Converter<List<UserEntity>, List<String>> converter = (entities) -> {
+                        logger.info("Inside of the ambulance converter ");
                         List<String> converted = new ArrayList<>();
 
                         entities.forEach((k) -> {
+                            logger.info("Converting " + k);
                             ServerMessage m = new ServerMessage();
                             m.setTo(k.getToken());
                             Data d = new Data();
                             d.setMessageBody("Hi, would you like to rebuild your path?");
                             /*build path*/
+                            logger.info("Build the path ");
                             d.setPath(routingService.getRoute(
                                     k.getCurrentLatitude()
                                     , k.getCurrentLongitude()
                                     , k.getDestinationLatitude()
                                     , k.getDestinationLongitude()));
                             m.setData(d);
+                            logger.info("Converted " + m);
                             /*convert into JSON format*/
                             Gson gson = new Gson();
                             logger.info("Converting and adding " + m + " to json");
@@ -106,16 +110,27 @@ public class UserPost {
                     };
                     logger.info("Sending the massages to converted  drivers ");
 
-                    senderService.send(
-                            converter.convert(
-                                    detectionService.detect(
-                                            radius
-                                            , deviceMessage.getCurrentLat()
-                                            , deviceMessage.getCurrentLon()
-                                            , userService.findAllByRole("driver"))));
+                   /* getting detected users */
+                    List<UserEntity> detected = detectionService.detect(
+                            radius,
+                            deviceMessage.getCurrentLat(),
+                            deviceMessage.getCurrentLon(),
+                            userService.findAllUnableDrivers());// except current
+                    logger.info("Converting drivers");
+                    senderService.send(converter.convert(detected));
+                    logger.info("Sending to everyone completed");
+                    logger.info("Making detected users unable");
+
+                    /* crutch to make detected users enable (received theirs paths)  */
+                    detected.forEach(v -> {
+                        logger.info("Unable " + v);
+                        v.setEnable(true);
+                        userService.save(v);
+                    });
+                    logger.info("Unable users complete ");
                     return new ResponseEntity<Void>(HttpStatus.OK);
                 } catch (NullPointerException e) {
-                    logger.warning("Warning." + e);
+                    logger.warning("Warning -> " + e);
                     return new ResponseEntity<Void>(HttpStatus.CONFLICT);
                 }
             }
@@ -141,7 +156,7 @@ public class UserPost {
                     userService.save(newUser);
                     logger.info("Saved user " + newUser);
                     return new ResponseEntity<Void>(HttpStatus.CREATED);
-                } else if (Objects.nonNull(currentToken) && userService.exist(currentToken)){
+                } else if (Objects.nonNull(currentToken) && userService.exist(currentToken)) {
                     /*update */
                     logger.info("Inside of the updating ");
                     UserEntity userEntity = userService.findUserByToken(currentToken);
@@ -177,7 +192,7 @@ public class UserPost {
                     logger.info("Updated " + person);
                 } else if (!userService.exist(deviceMessage.getCurrentToken())) {
                     /*save driver*/
-                    logger.info("Saving person" + deviceMessage.getRole());
+                    logger.info("Saving person " + deviceMessage.getRole());
                     UserEntity newUser = new UserEntity();
                     newUser = deviceMessage.setUserFieldsFromDeviceMessage(newUser);
                     newUser.setUserRole(userRoleService.findRoleByName("person"));
@@ -214,15 +229,18 @@ public class UserPost {
                         return converted;
                     };
                     /* send messages to everyone */
-                    if (Objects.nonNull(deviceMessage.getCurrentLat()) && Objects.nonNull(deviceMessage.getCurrentLon())) {
+                    if (Objects.nonNull(deviceMessage.getCurrentLat())
+                            && Objects.nonNull(deviceMessage.getCurrentLon())
+                            && Objects.nonNull(deviceMessage.getCurrentToken())) {
                         logger.info("Sending massages to everyone ");
-                        senderService.send(
-                                converter.convert(
-                                        detectionService.detect(
-                                                radius,
-                                                deviceMessage.getCurrentLat(),
-                                                deviceMessage.getCurrentLon(),
-                                                userService.findAllBeyondCurrent(deviceMessage.getCurrentToken()))));// everyone
+                        /* getting detected users */
+                        List<UserEntity> detected = detectionService.detect(
+                                radius,
+                                deviceMessage.getCurrentLat(),
+                                deviceMessage.getCurrentLon(),
+                                userService.findAllBeyondCurrent(deviceMessage.getCurrentToken()));// except current
+
+                        senderService.send(converter.convert(detected));
                         logger.info("Sending to everyone completed");
                     } else {
                         logger.info("massages weren't sent to everyone, currentLat and/or currentLon not found");

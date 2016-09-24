@@ -1,6 +1,5 @@
 package com.savelife.mvc.rest;
 
-import com.savelife.mvc.model.messaging.device.DeviceMessage;
 import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,12 +24,12 @@ public class UserGet {
     @Autowired
     UserService userService;
 
-    @GetMapping(params = {"role=ambulance"})
-    public Callable<ResponseEntity<String>> get(String role, @RequestParam("token") String token) {
+    @GetMapping()
+    public Callable<ResponseEntity<String>> get(@RequestParam("role") String role, @RequestParam("token") String token) {
         return () -> {
-            /*userService.findAllByRole(role).forEach(v -> System.out.println(v.getToken()));*/
             logger.info("Received role= " + role);
-            System.out.println(userService.exist(token));
+            userService.findAllUnableDrivers().forEach(v -> System.out.println(v.toString()));
+            userService.findAllBeyondCurrent(token).forEach(v -> System.out.println(v.toString()));
             return new ResponseEntity(HttpStatus.OK);
         };
     }

@@ -1,4 +1,5 @@
 package com.savelife.mvc.configuration;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,9 +24,9 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "com.savelife.mvc.configuration" })
+@ComponentScan({"com.savelife.mvc.configuration"})
 @EnableJpaRepositories("com.savelife.mvc.repository")
-@PropertySource(value = { "classpath:application.properties" })
+@PropertySource(value = {"classpath:application.properties"})
 public class HibernateConfiguration {
 
     @Autowired
@@ -78,7 +79,7 @@ public class HibernateConfiguration {
         txManager.setJpaDialect(jpaDialect);
         return txManager;
     }
-    
+
     @Bean
     public HibernateExceptionTranslator hibernateExceptionTranslator() {
         return new HibernateExceptionTranslator();

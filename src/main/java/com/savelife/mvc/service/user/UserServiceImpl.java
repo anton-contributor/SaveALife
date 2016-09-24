@@ -52,6 +52,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void update(UserEntity entity) {
+
+    }
+
+    @Override
     public boolean exist(String token) {
         logger.info("Inside of the exist method");
         return Objects.nonNull(userRepository.findByToken(token));
@@ -72,68 +77,48 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteByToken(token);
     }
 
-    /*
-     * Since the method is running with Transaction, No need to call hibernate update explicitly.
-     * Just fetch the entity from db and update it with proper values within transaction.
-     * It will be updated in db once transaction ends.
-     * */
-    @Override
-    public void update(UserEntity entity) {
-        logger.info("called UserServiceIml.update function");
-
-      /*  UserEntity user = userRepository.findByToken(entity.getToken());
-        if(entity.getToken() != null)
-            user.setToken(entity.getToken());
-        if(!Objects.isNull(entity.isEnable()))
-            user.setEnable(entity.isEnable());
-        if(entity.getCurrentLatitude() != null)
-            user.setCurrentLatitude(entity.getCurrentLatitude());
-        if(entity.getCurrentLongitude() != null)
-            user.setCurrentLongitude(entity.getCurrentLongitude());
-        if(entity.getDestinationLatitude() != null)
-            user.setDestinationLatitude(entity.getDestinationLatitude());
-        if(entity.getDestinationLongitude() != null)
-            user.setDestinationLongitude(entity.getDestinationLongitude());
-        if(!Objects.isNull(entity.getIdUser()))
-            user.setIdUser(entity.getIdUser());
-        userRepository.save(user);*/
-        userRepository.update(entity.getToken(), entity.getUserRole().getId(),
-                entity.getCurrentLatitude(), entity.getCurrentLongitude(), entity.isEnable(), entity.getIdUser());
-        logger.info("finished UserServiceIml.update function");
-    }
-
     @Override
     public void setAllUsersUnable() {
-        Iterable<UserEntity> all = userRepository.findAll();
-        for (UserEntity user : all) {
-            user.setEnable(false);
-            save(user);
-        }
+        userRepository
+                .findAll()
+                .forEach(v -> {
+                    v.setEnable(false);
+                    save(v);
+                });
     }
 
     @Override
     public void setAllUsersEnable() {
-        Iterable<UserEntity> all = userRepository.findAll();
-        for (UserEntity user : all) {
-            user.setEnable(true);
-            save(user);
-        }
+        userRepository
+                .findAll()
+                .forEach(v -> {
+                    v.setEnable(true);
+                    save(v);
+                });
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<UserEntity> findAllBeyondCurrent(String token) {
-       /* List<UserEntity> list = userRepository.findByTokenNot(token);
-        list.forEach(v -> logger.info(v.toString()));*/
-        List<UserEntity> listResult = new ArrayList<>();
+        /*List<UserEntity> listResult = new ArrayList<>();
         List<UserEntity> list = (List) userRepository.findAll();
         for (UserEntity e : list) {
             if (!Objects.equals(e.getToken(), token)) {
                 listResult.add(e);
             }
         }
-        listResult.forEach(v -> System.out.println(v));
+        listResult.forEach(v -> logger.info(v.toString()));
 
-        return listResult;
-       /* return userRepository.findByTokenNot(token);*/
+        return listResult;*/
+        return userRepository.findByTokenNot(token);
+    }
+
+    /* hard code */
+    @Override
+    public List<UserEntity> findAllUnableDrivers() {
+        return findAllByRole("Driver")
+                .stream()
+                .filter(v -> !v.isEnable())
+                .collect(toList());
     }
 }

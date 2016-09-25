@@ -33,4 +33,11 @@ public class UserGet {
             return new ResponseEntity(HttpStatus.OK);
         };
     }
+
+    @GetMapping(value = {"/"})
+    public Callable<ResponseEntity<String>> test() {
+        return () -> {
+            return new ResponseEntity<String>("Save A Life", HttpStatus.OK);
+        };
+    }
 }

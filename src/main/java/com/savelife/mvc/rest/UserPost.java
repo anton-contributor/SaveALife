@@ -33,8 +33,8 @@ public class UserPost {
     private static Logger logger = Logger.getLogger(UserPost.class.getName());
 
     /*
-   * send to android
-   * */
+    * send to android
+    * */
     @Autowired
     SenderService senderService;
 
@@ -64,7 +64,7 @@ public class UserPost {
 
     /*
     * send path to drivers depends on ambulance position
-    * TODO: in each sending of the ambulance coords, rebuilt a path for already sent driver
+    *
     * */
     @PostMapping(params = {"role=ambulance"})
     public Callable<ResponseEntity<Void>> postAmbulance(@RequestBody DeviceMessage deviceMessage) {
@@ -90,6 +90,7 @@ public class UserPost {
                             logger.info("Converting " + k);
                             ServerMessage m = new ServerMessage();
                             m.setTo(k.getToken());
+
                             Data d = new Data();
                             d.setMessageBody("Hi, would you like to rebuild your path?");
                             /*build path*/
@@ -101,6 +102,7 @@ public class UserPost {
                                     , k.getDestinationLongitude()));
                             m.setData(d);
                             logger.info("Converted " + m);
+
                             /*convert into JSON format*/
                             Gson gson = new Gson();
                             logger.info("Converting and adding " + m + " to json");
@@ -128,9 +130,11 @@ public class UserPost {
                         userService.save(v);
                     });
                     logger.info("Unable users complete ");
+
                     return new ResponseEntity<Void>(HttpStatus.OK);
                 } catch (NullPointerException e) {
                     logger.warning("Warning -> " + e);
+
                     return new ResponseEntity<Void>(HttpStatus.CONFLICT);
                 }
             }
@@ -153,6 +157,7 @@ public class UserPost {
                     newUser = deviceMessage.setUserFieldsFromDeviceMessage(newUser);
                     newUser.setUserRole(userRoleService.findRoleByName("driver"));
                     logger.info("Saving user " + newUser);
+
                     userService.save(newUser);
                     logger.info("Saved user " + newUser);
                     return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -162,6 +167,7 @@ public class UserPost {
                     UserEntity userEntity = userService.findUserByToken(currentToken);
                     userEntity = deviceMessage.setUserFieldsFromDeviceMessage(userEntity);
                     logger.info("Updating user " + userEntity);
+
                     userService.save(userEntity);
                     logger.info("Updated user " + userEntity);
                     return new ResponseEntity<Void>(HttpStatus.OK);
@@ -181,9 +187,7 @@ public class UserPost {
                 if (userService.exist(deviceMessage.getCurrentToken()) && Objects.nonNull(deviceMessage.getCurrentToken())) {
                     /* update person*/
                     logger.info("Updating " + deviceMessage.getRole());
-
                     UserEntity person = userService.findUserByToken(deviceMessage.getCurrentToken());
-
                     logger.info("Updating user " + person);
 
                     person = deviceMessage.setUserFieldsFromDeviceMessage(person);
@@ -193,6 +197,7 @@ public class UserPost {
                 } else if (!userService.exist(deviceMessage.getCurrentToken())) {
                     /*save driver*/
                     logger.info("Saving person " + deviceMessage.getRole());
+
                     UserEntity newUser = new UserEntity();
                     newUser = deviceMessage.setUserFieldsFromDeviceMessage(newUser);
                     newUser.setUserRole(userRoleService.findRoleByName("person"));
@@ -212,6 +217,7 @@ public class UserPost {
                             ServerMessage m = new ServerMessage();
                             logger.info("Send to " + k.getToken());
                             m.setTo(k.getToken());
+
                             Data d = new Data();
                             logger.info("Adding message " + deviceMessage.getMessage());
                             d.setMessageBody("Need a help due to the " + deviceMessage.getMessage());
@@ -221,6 +227,7 @@ public class UserPost {
                             m.setData(d);
                             logger.info("Added data body to message" + d);
                             logger.info("Converting and adding " + m + " to json");
+
                             /* convert into JSON format*/
                             Gson gson = new Gson();
                             converted.add(gson.toJson(m));
@@ -247,6 +254,7 @@ public class UserPost {
                     }
                 }
                 logger.info("postPerson method successfully finished");
+
                 return new ResponseEntity<Void>(HttpStatus.OK);
             }
         };

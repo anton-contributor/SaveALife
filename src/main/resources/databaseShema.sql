@@ -20,11 +20,7 @@ USE `savelife` ;
 -- -----------------------------------------------------
 -- Table `savelife`.`user_role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `savelife`.`user_role` (
-  `id` INT NOT NULL  ,
-  `userRole` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `savelife`.`user_role` (`id` INT NOT NULL  AUTO_INCREMENT,`userRole` VARCHAR(45) NOT NULL,PRIMARY KEY (`id`))ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------

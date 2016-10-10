@@ -25,7 +25,8 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public GeoApiContext geoApiContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setApiKey("AIzaSyDm5ufZDaINAPv4BF8NjC7hEK9Nsno1ocE");
+//        geoApiContext.setApiKey("AIzaSyDm5ufZDaINAPv4BF8NjC7hEK9Nsno1ocE");
+        geoApiContext.setApiKey("AIzaSyAaAfOrNHFkfsUYp6_uVprFmvctHeqAoT0");
         geoApiContext.setConnectTimeout(1, TimeUnit.SECONDS)
                 .setReadTimeout(1, TimeUnit.SECONDS)
                 .setWriteTimeout(1, TimeUnit.SECONDS);

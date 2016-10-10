@@ -103,7 +103,7 @@ public class UserRestController {
                     logger.info("Updating role " + currentRole + " to " + deviceMessage.getRole());
                     UserEntity userEntity = userService.findUserByToken(deviceMessage.getCurrentToken());
                     userEntity.setUserRole(userRoleService.findRoleByName(deviceMessage.getRole()));
-                    userService.update(userEntity);
+                    userService.save(userEntity);
                     logger.info("Updated " + userEntity);
                 }
 
@@ -114,7 +114,7 @@ public class UserRestController {
 
                 userEntity.setToken(deviceMessage.getCurrentToken());
 
-                userService.update(userEntity);
+                userService.save(userEntity);
                 logger.info("Updated " + userEntity);
                 return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);
             } catch (NullPointerException e) {

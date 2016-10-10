@@ -18,8 +18,6 @@ public interface UserService {
 
     List<UserEntity> findAllByRole(String role);
 
-    void update(UserEntity entity);
-
     boolean exist(String token);
 
     void save(UserEntity userEntity);
@@ -33,4 +31,6 @@ public interface UserService {
     void setAllUsersEnable();
 
     List<UserEntity> findAllBeyondCurrent(String token);
+
+    List<UserEntity> findAllUnableDrivers();
 }

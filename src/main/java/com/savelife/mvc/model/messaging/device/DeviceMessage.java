@@ -2,6 +2,7 @@ package com.savelife.mvc.model.messaging.device;
 
 import com.savelife.mvc.model.user.UserEntity;
 
+import java.util.Objects;
 /**
  * Created by anton on 18.08.16.
  */
@@ -177,13 +178,25 @@ public class DeviceMessage {
         return sb.toString();
     }
 
-    public UserEntity setUserFieldsFromDeviceMessage(UserEntity user){
-        user.setCurrentLatitude(currentLat);
-        user.setCurrentLongitude(currentLon);
-        user.setDestinationLatitude(destinationLat);
-        user.setDestinationLongitude(destinationLon);
-        user.setEnable(enable);
-        user.setToken(currentToken);
+    public UserEntity setUserFieldsFromDeviceMessage(UserEntity user) {
+        if (Objects.nonNull(this.currentLat))
+            user.setCurrentLatitude(this.currentLat);
+
+        if (Objects.nonNull(this.currentLon))
+            user.setCurrentLongitude(this.currentLon);
+
+        if (Objects.nonNull(this.destinationLat))
+            user.setDestinationLatitude(this.destinationLat);
+
+        if (Objects.nonNull(this.destinationLon))
+            user.setDestinationLongitude(this.destinationLon);
+
+        if (Objects.nonNull(this.enable))
+            user.setEnable(this.enable);
+
+        if (Objects.nonNull(this.currentToken))
+            user.setToken(this.currentToken);
+
         return user;
     }
 }

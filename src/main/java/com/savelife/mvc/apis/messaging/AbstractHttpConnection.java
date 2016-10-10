@@ -22,7 +22,7 @@ public interface AbstractHttpConnection<T extends String> {
     /*
     * send get by url and receiving the response and return it
     * */
-    default String getByURL(final T urlAddress){
+    default String getByURL(final T urlAddress) {
         URL url;
         HttpURLConnection connection;
         BufferedReader bufferedReader;
@@ -37,7 +37,7 @@ public interface AbstractHttpConnection<T extends String> {
             connection.setRequestMethod("GET");
             bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-            while ((line = bufferedReader.readLine()) != null){
+            while ((line = bufferedReader.readLine()) != null) {
                 buffer.append(line);
             }
             /* close input*/
@@ -65,13 +65,13 @@ public interface AbstractHttpConnection<T extends String> {
         String response = null;
 
         try {
-            post.addHeader(new BasicHeader("Content-Type","application/json"));
-            post.addHeader(new BasicHeader("Authorization",key));
+            post.addHeader(new BasicHeader("Content-Type", "application/json"));
+            post.addHeader(new BasicHeader("Authorization", key));
             post.setEntity(body);
 
             closeableHttpResponse = httpClient.execute(post);
             response = String.valueOf(closeableHttpResponse);
-
+            System.out.println("Response = " + closeableHttpResponse);
         } catch (Exception e) {
             e.printStackTrace();
         }

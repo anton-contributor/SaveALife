@@ -14,6 +14,7 @@
     <properties>
         <springframework.version>4.3.2.RELEASE</springframework.version>
         <springdata.version>1.10.2.RELEASE</springdata.version>
+        <spring.security.version>4.1.3.RELEASE</spring.security.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <validetion-api.version>1.1.0.Final</validetion-api.version>
         <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
@@ -62,6 +63,30 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${springdata.version}</version>
+        </dependency>
+
+        <!--Spring Security-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+
+        <!--spring-session-redis-->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+            <version>1.2.2.RELEASE</version>
         </dependency>
 
         <!--hibernate -->

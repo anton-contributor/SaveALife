@@ -4,11 +4,9 @@ import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.model.user.UserRoleEntity;
 import com.savelife.mvc.repository.UserRepository;
 import com.savelife.mvc.repository.UserRoleRepository;
-import com.savelife.mvc.rest.UserReceivingRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;

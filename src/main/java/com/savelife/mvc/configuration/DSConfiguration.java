@@ -21,9 +21,9 @@ public class DSConfiguration extends AbstractAnnotationConfigDispatcherServletIn
         return new String[]{"/"};
     }
 
-    @Override
-    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
-        registration.setInitParameter("dispatchOptionsRequest", "true");
-        registration.setAsyncSupported(true);
-    }
+//    @Override
+//    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+//        registration.setInitParameter("dispatchOptionsRequest", "true");
+//        registration.setAsyncSupported(true);
+//    }
 }

@@ -1,8 +1,16 @@
 package com.savelife.mvc.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.session.data.redis.RedisOperationsSessionRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @RestController
 public class LoginController {
@@ -10,6 +18,16 @@ public class LoginController {
     @RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
     public String welcomePage() {
         return "Wellcome page";
+    }
+
+    @RequestMapping(value = { "/logout"}, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String logout(HttpServletResponse response, HttpSession session) {
+        session.invalidate();
+//        response.addCookie(new Cookie("test", "invalidSession"));
+//        return "logout page";
+//        session.invalidate();
+        return "logoutpage";
     }
 
 

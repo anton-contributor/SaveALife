@@ -16,6 +16,12 @@ public class UserEntity {
     @Column(name = "token")
     private String token;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "enable")
     private boolean enable;
 
@@ -112,6 +118,22 @@ public class UserEntity {
         this.userRole = userRole;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -152,6 +174,7 @@ public class UserEntity {
         return "UserEntity{" +
                 "idUser=" + idUser +
                 ", token='" + token + '\'' +
+                ", email=" + email +
                 ", enable=" + enable +
                 ", currentLatitude=" + currentLatitude +
                 ", currentLongitude=" + currentLongitude +

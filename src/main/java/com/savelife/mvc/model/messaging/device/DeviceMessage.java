@@ -7,6 +7,10 @@ import java.util.Objects;
  * Created by anton on 18.08.16.
  */
 public class DeviceMessage {
+
+
+    private String email;
+    private String password;
     /*
     * current token
     * */
@@ -53,6 +57,22 @@ public class DeviceMessage {
     private boolean enable;
 
     public DeviceMessage() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCurrentToken() {
@@ -196,6 +216,12 @@ public class DeviceMessage {
 
         if (Objects.nonNull(this.currentToken))
             user.setToken(this.currentToken);
+
+        if (Objects.nonNull(this.email))
+            user.setEmail(this.email);
+
+        if (Objects.nonNull(this.password))
+            user.setPassword(this.password);
 
         return user;
     }

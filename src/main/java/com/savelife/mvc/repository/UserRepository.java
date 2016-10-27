@@ -16,6 +16,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     UserEntity findByToken(String token);
 
+    UserEntity findByEmail(String email);
+
     @Transactional
     void deleteByToken(String token);
 

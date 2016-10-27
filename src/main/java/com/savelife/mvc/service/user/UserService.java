@@ -14,6 +14,8 @@ public interface UserService {
 
     UserEntity findUserById(long id_user);
 
+    UserEntity findUserByEmail(String email);
+
     List<UserEntity> findAllUsers();
 
     List<UserEntity> findAllByRole(String role);

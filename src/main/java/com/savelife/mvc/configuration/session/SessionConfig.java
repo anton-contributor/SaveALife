@@ -40,7 +40,7 @@ public class SessionConfig {
     public SessionRepository sessionRepository(RedisConnectionFactory connectionFactory) {
         RedisOperationsSessionRepository redisOperationsSessionRepository =
                 new RedisOperationsSessionRepository(connectionFactory);
-        redisOperationsSessionRepository.setDefaultMaxInactiveInterval(90);
+        redisOperationsSessionRepository.setDefaultMaxInactiveInterval(2592000);
         redisOperationsSessionRepository.setRedisKeyNamespace("savelife");
         return redisOperationsSessionRepository;
     }

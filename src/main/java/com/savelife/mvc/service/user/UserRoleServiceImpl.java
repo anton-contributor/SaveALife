@@ -31,4 +31,6 @@ public class UserRoleServiceImpl implements UserRoleService {
     public List<UserRoleEntity> findAll() {
         return (List)userRoleRepository.findAll();
     }
+
+
 }

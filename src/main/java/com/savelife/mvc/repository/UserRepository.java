@@ -14,14 +14,16 @@ import java.util.List;
  */
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
+    @Transactional
+    void deleteByToken(String token);
+
     UserEntity findByToken(String token);
 
     UserEntity findByEmail(String email);
 
-    @Transactional
-    void deleteByToken(String token);
-
     List<UserEntity> findAllByUserRole(UserRoleEntity userRoleEntity);
 
     List<UserEntity> findByTokenNot(String token);
+
+    UserEntity findByPhoneNumber(String phoneNumber);
 }

@@ -1,172 +1,36 @@
 package com.savelife.mvc.model.messaging.device;
 
 import com.savelife.mvc.model.user.UserEntity;
+import lombok.Data;
 
 import java.util.Objects;
 /**
  * Created by anton on 18.08.16.
  */
-public class DeviceMessage {
+@Data public class DeviceMessage {
 
 
     private String email;
     private String password;
-    /*
-    * current token
-    * */
+    private String phoneNumber;
     private String currentToken;
-
     /*
     * old token if exists, to clean connection to device
     * */
     private String oldToken;
-
-    /*
-    * current latitude
-    * */
     private Double currentLat;
-
-    /*
-    * current longitude
-    * */
     private Double currentLon;
-
-    /*
-    * destination latitude
-    * */
     private Double destinationLat;
-
-    /*
-    * destination longitude
-    * */
     private Double destinationLon;
-
-    /*
-    * device role
-    * */
     private String role;
-
     /*
     * help me message
     * */
     private String message;
-
     /*
     * check ambulance enabling(still in route or completed)
     * */
-    private boolean enable;
-
-    public DeviceMessage() {
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getCurrentToken() {
-        return currentToken;
-    }
-
-    public void setCurrentToken(String currentToken) {
-        this.currentToken = currentToken;
-    }
-
-    public String getOldToken() {
-        return oldToken;
-    }
-
-    public void setOldToken(String oldToken) {
-        this.oldToken = oldToken;
-    }
-
-    public Double getCurrentLat() {
-        return currentLat;
-    }
-
-    public void setCurrentLat(Double currentLat) {
-        this.currentLat = currentLat;
-    }
-
-    public Double getCurrentLon() {
-        return currentLon;
-    }
-
-    public void setCurrentLon(Double currentLon) {
-        this.currentLon = currentLon;
-    }
-
-    public Double getDestinationLat() {
-        return destinationLat;
-    }
-
-    public void setDestinationLat(Double destinationLat) {
-        this.destinationLat = destinationLat;
-    }
-
-    public Double getDestinationLon() {
-        return destinationLon;
-    }
-
-    public void setDestinationLon(Double destinationLon) {
-        this.destinationLon = destinationLon;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isEnable() {
-        return enable;
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DeviceMessage that = (DeviceMessage) o;
-
-        if (enable != that.enable) return false;
-        if (currentToken != null ? !currentToken.equals(that.currentToken) : that.currentToken != null) return false;
-        if (oldToken != null ? !oldToken.equals(that.oldToken) : that.oldToken != null) return false;
-        if (currentLat != null ? !currentLat.equals(that.currentLat) : that.currentLat != null) return false;
-        if (currentLon != null ? !currentLon.equals(that.currentLon) : that.currentLon != null) return false;
-        if (destinationLat != null ? !destinationLat.equals(that.destinationLat) : that.destinationLat != null)
-            return false;
-        if (destinationLon != null ? !destinationLon.equals(that.destinationLon) : that.destinationLon != null)
-            return false;
-        if (role != null ? !role.equals(that.role) : that.role != null) return false;
-        return message != null ? message.equals(that.message) : that.message == null;
-
-    }
+    private boolean enable = true;
 
     @Override
     public int hashCode() {
@@ -222,6 +86,9 @@ public class DeviceMessage {
 
         if (Objects.nonNull(this.password))
             user.setPassword(this.password);
+
+        if(Objects.nonNull(this.phoneNumber))
+            user.setPhoneNumber(this.phoneNumber);
 
         return user;
     }

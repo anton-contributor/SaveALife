@@ -2,17 +2,13 @@ package com.savelife.mvc.rest;
 
 import com.savelife.mvc.model.messaging.device.DeviceMessage;
 import com.savelife.mvc.model.user.UserEntity;
+import com.savelife.mvc.model.user.UserRoleEntity;
+import com.savelife.mvc.service.user.UserRoleService;
 import com.savelife.mvc.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.session.data.redis.RedisOperationsSessionRepository;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @RestController
 public class LoginController {
@@ -20,23 +16,53 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserRoleService userRoleService;
+
+
+
     @RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
     public String welcomePage() {
         return "Wellcome page";
     }
 
+
     @RequestMapping(value = {"/signUp"}, method = RequestMethod.POST)
     public ResponseEntity<String> signUp(@RequestBody DeviceMessage deviceMessage){
-        String email = deviceMessage.getEmail();
-        if(email == null)
-            return new ResponseEntity<String>("email is invalid", HttpStatus.UNPROCESSABLE_ENTITY);
-        else if(userService.findUserByEmail(email) != null)
-            return new ResponseEntity<String>("user already exists", HttpStatus.UNPROCESSABLE_ENTITY);
+
+        if(deviceMessage == null)
+            return new ResponseEntity<>("device message wasn't got", HttpStatus.BAD_REQUEST);
+
+        UserEntity newUser = deviceMessage.setUserFieldsFromDeviceMessage(new UserEntity());
+        if(newUser == null)
+            return new ResponseEntity<>("userWasn't created from device message", HttpStatus.BAD_REQUEST);
+
+        UserRoleEntity role = userRoleService.findRoleByName(deviceMessage.getRole());
+        if(role == null)
+            return new ResponseEntity<>("role wasn't found", HttpStatus.UNPROCESSABLE_ENTITY);
+
+        String password = newUser.getPassword();
+        String phoneNumber = newUser.getPhoneNumber();
+
+        if(phoneNumber == null || password == null)
+            return new ResponseEntity<>("phone number or password wasn't got", HttpStatus.UNPROCESSABLE_ENTITY);
+        else if(userService.findByPhoneNumber(phoneNumber) != null)
+            return new ResponseEntity<>("user already exists", HttpStatus.UNPROCESSABLE_ENTITY);
         else {
-            userService.save(deviceMessage.setUserFieldsFromDeviceMessage(new UserEntity()));
+            newUser.setUserRole(role);
+            userService.save(newUser);
         }
-        return new ResponseEntity<String>("new user was created", HttpStatus.CREATED);
+        return new ResponseEntity<>("new user was created<br>" + newUser
+                + "<br>" + deviceMessage, HttpStatus.CREATED);
     }
+
+
+    @RequestMapping(value = {"/signIn"}, method = RequestMethod.GET)
+    public ResponseEntity<String> signIn() {
+        return new ResponseEntity<String>("you have successfully logged in", HttpStatus.OK);
+    }
+
+
 //    //Spring Security see this :
 //    @RequestMapping(value = "/login", method = RequestMethod.GET)
 //    public ModelAndView login(
@@ -55,5 +81,4 @@ public class LoginController {
 //
 //        return model;
 //    }
-
 }

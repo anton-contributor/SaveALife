@@ -53,8 +53,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllByUserRole(userRole);
     }
 
-
-
     @Override
     public boolean exist(String token) {
         logger.info("Inside of the exist method");
@@ -108,5 +106,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserEntity> findAllBeyondCurrent(String token) {
         return userRepository.findByTokenNot(token);
+    }
+
+    @Override
+    public UserEntity findByPhoneNumber(String phoneNumber){
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 }

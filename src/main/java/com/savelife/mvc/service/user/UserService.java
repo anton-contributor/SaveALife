@@ -35,4 +35,6 @@ public interface UserService {
     List<UserEntity> findAllBeyondCurrent(String token);
 
     List<UserEntity> findAllUnableDrivers();
+
+    UserEntity findByPhoneNumber(String phoneNumber);
 }

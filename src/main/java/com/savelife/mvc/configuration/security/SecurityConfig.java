@@ -25,10 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 				.jdbcAuthentication().dataSource(dataSource)
-				.usersByUsernameQuery("SELECT phoneNumber,password,enable FROM user WHERE phoneNumber=?;" )
-				.authoritiesByUsernameQuery("SELECT phoneNumber, userRole FROM user "
-						+ "JOIN user_role ON user.userRoleID = user_role.id "
-						+ "WHERE phoneNumber=?;");
+				.usersByUsernameQuery("SELECT phone_number,password,enable FROM user WHERE phone_number=?;" )
+				.authoritiesByUsernameQuery("SELECT phone_number, user_role FROM user "
+						+ "JOIN user_role ON user.user_role_id = user_role.id "
+						+ "WHERE phone_number=?;");
 	}
 
 	@Override

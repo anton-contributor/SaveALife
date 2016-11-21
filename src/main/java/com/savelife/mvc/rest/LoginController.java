@@ -20,7 +20,6 @@ public class LoginController {
     UserRoleService userRoleService;
 
 
-
     @RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
     public String welcomePage() {
         return "Wellcome page";

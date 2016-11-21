@@ -1,18 +1,23 @@
 package com.savelife.mvc.model.user;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by anton on 16.08.16.
  */
 @Entity
 @Table(name = "user", schema = "savelife")
-@Data public class UserEntity {
+@Data
+@ToString(exclude = "userContacts")
+public class UserEntity {
 
     @Id
-    @Column(name = "idUser")
+    @Column(name = "user_id")
     private long idUser;
 
     @Column(name = "token")
@@ -21,29 +26,37 @@ import javax.persistence.*;
 /*authorization fields*/
     @Column(name = "email")
     private String email;
-    @Column(name = "phoneNumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "password")
     private String password;
     @Column(name = "enable")
     private boolean enable;
+    @Column(name = "name")
+    private String name;
 /*authorization fields*/
 
-    @Column(name = "currentLatitude")
+    @Column(name = "current_latitude")
     private Double currentLatitude;
 
-    @Column(name = "currentLongitude")
+    @Column(name = "current_longitude")
     private Double currentLongitude;
 
-    @Column(name = "destinationLatitude")
+    @Column(name = "destination_latitude")
     private Double destinationLatitude;
 
-    @Column(name = "destinationLongitude")
+    @Column(name = "destination_longitude")
     private Double destinationLongitude;
 
     @ManyToOne
-    @JoinColumn(name = "userRoleID")
+    @JoinColumn(name = "user_role_id")
     private UserRoleEntity userRole;
+
+    @JoinTable(name = "user_contacts",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "contact_id", referencedColumnName = "user_id", nullable = false)})
+    @ManyToMany
+    private List<UserEntity> userContacts;
 
     @Override
     public int hashCode() {

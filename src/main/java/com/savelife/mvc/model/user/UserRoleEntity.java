@@ -1,6 +1,7 @@
 package com.savelife.mvc.model.user;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,25 +12,17 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "user_role", schema = "savelife")
-@Data public class UserRoleEntity {
+@Data
+@ToString(exclude = "userEntities")
+public class UserRoleEntity {
     @Id
     @Column(name = "id")
     private int id;
 
-    @Column(name = "userRole")
+    @Column(name = "user_role")
     private String userRole;
 
     @OneToMany(mappedBy = "userRole")
     private Set<UserEntity> userEntities = new HashSet<UserEntity>();
 
-
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("UserRoleEntity{");
-        sb.append("id_user_role=").append(id);
-        sb.append(", user_role='").append(userRole).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
 }

@@ -1,6 +1,7 @@
 package com.savelife.mvc.service.user;
 
 import com.savelife.mvc.model.user.UserEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -20,6 +21,13 @@ public interface UserService {
 
     List<UserEntity> findAllByRole(String role);
 
+    List<UserEntity> findAllBeyondCurrent(String token);
+
+    List<UserEntity> findAllUnableDrivers();
+
+    UserEntity findByPhoneNumber(String phoneNumber);
+
+
     boolean exist(String token);
 
     void save(UserEntity userEntity);
@@ -32,9 +40,16 @@ public interface UserService {
 
     void setAllUsersEnable();
 
-    List<UserEntity> findAllBeyondCurrent(String token);
 
-    List<UserEntity> findAllUnableDrivers();
 
-    UserEntity findByPhoneNumber(String phoneNumber);
+    void addContactById(Long userId, Long contactId);
+
+    void addContactByPhoneNumber(String userPhoneNumber, String contactPhoneNumber);
+
+    boolean existByPhoneNumber(String phoneNumber);
+
+    boolean deleteContact(String ContactNumber);
+
+    //    boolean deleteContact(String UserNumber, String ContactNumber);
+
 }

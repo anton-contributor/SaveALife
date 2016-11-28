@@ -24,5 +24,4 @@ public class UserRoleEntity {
 
     @OneToMany(mappedBy = "userRole")
     private Set<UserEntity> userEntities = new HashSet<UserEntity>();
-
 }

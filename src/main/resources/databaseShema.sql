@@ -10,48 +10,55 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema savelife
 -- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema savelife
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `savelife` DEFAULT CHARACTER SET utf8 COLLATE utf8_icelandic_ci ;
 USE `savelife` ;
 
 -- -----------------------------------------------------
 -- Table `savelife`.`user_role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `savelife`.`user_role` (
-  `id` INT NOT NULL  AUTO_INCREMENT,
-  `userRole` VARCHAR(45) NOT NULL,
+CREATE TABLE `user_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_role` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
-)ENGINE = InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_icelandic_ci;
 
 
 -- -----------------------------------------------------
 -- Table `savelife`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `savelife`.`user` (
-  `idUser` BIGINT(11) NOT NULL AUTO_INCREMENT,
-  `token` LONGTEXT ,
-  `currentLatitude` DOUBLE ,
-  `currentLongitude` DOUBLE ,
-  `destinationLatitude` DOUBLE ,
-  `destinationLongitude` DOUBLE ,
-  `enable` BOOLEAN,
-  `userRoleID` INT NOT NULL,
-  PRIMARY KEY (`idUser`, `userRoleID`),
-  INDEX `fk_user_user_role_idx` (`userRoleID` ASC),
-  CONSTRAINT `fk_user_user_role`
-    FOREIGN KEY (`userRoleID`)
-    REFERENCES `savelife`.`user_role` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `phone_number` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `user_role_id` int(11) NOT NULL,
+  `password` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `token` longtext CHARACTER SET utf8,
+  `current_latitude` double DEFAULT NULL,
+  `current_longitude` double DEFAULT NULL,
+  `destination_latitude` double DEFAULT NULL,
+  `destination_longitude` double DEFAULT NULL,
+  `enable` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`user_id`,`user_role_id`),
+  UNIQUE KEY `phoneNumber_UNIQUE` (`phone_number`),
+  KEY `fk_user_user_role_idx` (`user_role_id`),
+  CONSTRAINT `fk_user_user_role` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_icelandic_ci;
 
-ALTER TABLE `savelife`.`user`
-  ADD COLUMN `email` VARCHAR(100) NOT NULL AFTER `userRoleID`;
-ALTER TABLE `savelife`.`user`
-  ADD COLUMN `password` VARCHAR(100) NOT NULL AFTER `email`;
+
+-- -----------------------------------------------------
+-- Table `savelife`.`user_contacts`
+-- -----------------------------------------------------
+CREATE TABLE `user_contacts` (
+  `user_id` int(11) NOT NULL,
+  `contact_id` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`contact_id`),
+  KEY `fk_user_has_user_user2_idx` (`contact_id`),
+  KEY `fk_user_has_user_user1_idx` (`user_id`),
+  CONSTRAINT `fk_user_has_user_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_user_user2` FOREIGN KEY (`contact_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_icelandic_ci;
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

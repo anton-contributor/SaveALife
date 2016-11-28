@@ -14,7 +14,6 @@ import java.util.List;
  */
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
-    @Transactional
     void deleteByToken(String token);
 
     UserEntity findByToken(String token);

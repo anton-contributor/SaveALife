@@ -32,8 +32,12 @@ public class UserEntity {
     private String password;
     @Column(name = "enable")
     private boolean enable;
-    @Column(name = "name")
-    private String name;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "doctor_specialty")
+    private String doctorSpecialty;
 /*authorization fields*/
 
     @Column(name = "current_latitude")

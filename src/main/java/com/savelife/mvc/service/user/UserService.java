@@ -13,7 +13,7 @@ public interface UserService {
 
     UserEntity findUserByToken(String token);
 
-    UserEntity findUserById(long id_user);
+    UserEntity findUserById(long userId);
 
     UserEntity findUserByEmail(String email);
 
@@ -50,6 +50,8 @@ public interface UserService {
 
     boolean deleteContact(String ContactNumber);
 
-    //    boolean deleteContact(String UserNumber, String ContactNumber);
+    List<UserEntity> getUserContactsList(long userId);
+
+        //    boolean deleteContact(String UserNumber, String ContactNumber);
 
 }

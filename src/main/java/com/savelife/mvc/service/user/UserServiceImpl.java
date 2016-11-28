@@ -1,6 +1,5 @@
 package com.savelife.mvc.service.user;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.savelife.mvc.model.user.UserEntity;
 import com.savelife.mvc.model.user.UserRoleEntity;
 import com.savelife.mvc.repository.UserRepository;
@@ -11,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -81,6 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
     @Override
     public boolean exist(String token) {
         logger.info("Inside of the exist method");
@@ -93,6 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(UserEntity entity) {
         userRepository.delete(entity);
     }
@@ -123,6 +123,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
     @Override
     @Transactional
     public void addContactById(Long userId, Long contactId) {
@@ -149,17 +150,6 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-//    @Override
-//    @Transactional
-//    public boolean deleteContact(String userNumber, String contactNumber) {
-//
-//        UserEntity user = userRepository.findByPhoneNumber(userNumber);
-//        UserEntity contact = userRepository.findByPhoneNumber(contactNumber);
-//
-//        user.getUserContacts().remove(contact);
-//        return true;
-//    }
-
     @Override
     @Transactional
     public boolean deleteContact(String contactNumber) {
@@ -181,4 +171,27 @@ public class UserServiceImpl implements UserService {
 
         return true;
     }
+
+    @Override
+    @Transactional
+    public List<UserEntity> getUserContactsList(long userId){
+        List<UserEntity> userContacts = userRepository.findOne(userId).getUserContacts();
+
+        for(UserEntity user : userContacts)
+            user.getUserRole();
+
+        return userContacts;
+    }
+
+
+//    @Override
+//    @Transactional
+//    public boolean deleteContact(String userNumber, String contactNumber) {
+//
+//        UserEntity user = userRepository.findByPhoneNumber(userNumber);
+//        UserEntity contact = userRepository.findByPhoneNumber(contactNumber);
+//
+//        user.getUserContacts().remove(contact);
+//        return true;
+//    }
 }

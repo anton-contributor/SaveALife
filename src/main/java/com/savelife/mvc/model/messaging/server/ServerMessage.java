@@ -1,8 +1,11 @@
 package com.savelife.mvc.model.messaging.server;
 
+import java.util.Map;
+
 /**
  * @Massage POJO massage for sanding token cloud massaging service
  */
+@lombok.Data
 public class ServerMessage {
 
     /*
@@ -13,39 +16,8 @@ public class ServerMessage {
     /*
     * massage content
     * */
-    private Data data;
+    private Map<String, String> data;
 
-    public ServerMessage() {
-
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ServerMessage serverMessage = (ServerMessage) o;
-
-        if (to != null ? !to.equals(serverMessage.to) : serverMessage.to != null) return false;
-        return data != null ? data.equals(serverMessage.data) : serverMessage.data == null;
-
-    }
 
     @Override
     public int hashCode() {

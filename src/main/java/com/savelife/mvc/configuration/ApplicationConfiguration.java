@@ -25,7 +25,6 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public GeoApiContext geoApiContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
-//        geoApiContext.setApiKey("AIzaSyDm5ufZDaINAPv4BF8NjC7hEK9Nsno1ocE");
         geoApiContext.setApiKey("AIzaSyAaAfOrNHFkfsUYp6_uVprFmvctHeqAoT0");
         geoApiContext.setConnectTimeout(1, TimeUnit.SECONDS)
                 .setReadTimeout(1, TimeUnit.SECONDS)
@@ -36,7 +35,6 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public MassagingFireBaseContext massagingFireBaseContext() {
         MassagingFireBaseContext massagingFireBaseContext = new MassagingFireBaseContext();
-//        massagingFireBaseContext.setApiKey("AIzaSyBJ6NYpCY-y3dhVCtnbPaNyBGn2oetce5M");'
         massagingFireBaseContext.setApiKey("AIzaSyD-ydqn5T5XUpshJMYAwHmeRyWB0aIEMAw");
         massagingFireBaseContext.setConnectionUrl("https://fcm.googleapis.com/fcm/send");
         return massagingFireBaseContext;

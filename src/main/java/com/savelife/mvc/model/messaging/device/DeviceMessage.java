@@ -13,11 +13,16 @@ import java.util.Objects;
     private String email;
     private String password;
     private String phoneNumber;
+    private String firstName;
+    private String lastName;
+    private boolean isDoctor;
+
     private String currentToken;
     /*
     * old token if exists, to clean connection to device
     * */
     private String oldToken;
+
     private Double currentLat;
     private Double currentLon;
     private Double destinationLat;
@@ -46,23 +51,13 @@ import java.util.Objects;
         return result;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("DeviceMessage{");
-        sb.append("currentToken='").append(currentToken).append('\'');
-        sb.append(", oldToken='").append(oldToken).append('\'');
-        sb.append(", currentLat=").append(currentLat);
-        sb.append(", currentLon=").append(currentLon);
-        sb.append(", destinationLat=").append(destinationLat);
-        sb.append(", destinationLon=").append(destinationLon);
-        sb.append(", role='").append(role).append('\'');
-        sb.append(", message='").append(message).append('\'');
-        sb.append(", enable=").append(enable);
-        sb.append('}');
-        return sb.toString();
-    }
-
     public UserEntity setUserFieldsFromDeviceMessage(UserEntity user) {
+        if (Objects.nonNull(this.firstName))
+            user.setFirstName(this.firstName);
+
+        if (Objects.nonNull(this.lastName))
+            user.setLastName(this.lastName);
+
         if (Objects.nonNull(this.currentLat))
             user.setCurrentLatitude(this.currentLat);
 

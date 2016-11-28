@@ -75,7 +75,9 @@ public class ContactsController {
                     continue;
                 }
                 checkedNumber.put("status", "enable");
-                checkedNumber.put("name", currentUser.getName());
+                checkedNumber.put("firstName", currentUser.getFirstName());
+                checkedNumber.put("lastName", currentUser.getLastName());
+
             }
 
             resultMap.put(number, checkedNumber);
